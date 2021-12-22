@@ -30,7 +30,7 @@ import random
 
 class Organism:
     def __init__(self, optimum, n_organisms, mu_mean, sigma_covariance, n_dim, mutation_rate, gen_duplication_rate,
-                 gen_deletion_rate, n_generations, verbose=True):
+                 gen_deletion_rate, n_generations, limit_min, limit_max, verbose=True):
         self.optimum = optimum
         self.n_organisms = n_organisms
         self.mu_mean = mu_mean
@@ -40,19 +40,16 @@ class Organism:
         self.gen_duplication_rate = gen_duplication_rate
         self.gen_deletion_rate = gen_deletion_rate
         self.n_generations = n_generations
+        self.limit_min = limit_min
+        self.limit_max = limit_max
         self.verbose = verbose
 
     # creacion del organismo
-    def create_organism(self, min=0,
-                        max=500):  # largest number supported by the machine (extracted used import sys sys.maxsize in python terminal)
-        # organism = {'mu' : np.random.uniform(min, max), 'sigma' : [np.random.uniform(min, max)]}
-        # mu = [np.random.randint(min, max, self.n_dim)]
-        # mu = [None]*self.n_dim
-        # mu.append(np.random.randint(min, max))
-        # mu = random.sample(range(min, max), self.n_dim)
-        mu = [np.random.randint(min, max)] * self.n_dim
-        sigma = [np.random.randint(min, max)]
-        organism = [mu, sigma]
+    def create_organism(self):
+        mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
+        #sigma = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
+        sigma = [np.random.uniform(self.limit_min, self.limit_max)]
+        organism = mu, sigma
         # organism = [[np.random.randint(min, max)]*self.n_dim, [np.random.randint(min, max)]*self.n_dim]
         # [np.random.randint(min, max) for _ in range(len(self.optimum))]
         return organism
@@ -61,27 +58,17 @@ class Organism:
     def mutation(self, organism):
         print("Iniciando mutacion")
         print('Organismo : ' + str(organism))
-        for i in range(len(organism)):
-            if random.random() <= self.mutation_rate:
-                # point = np.random.randint(len(self.optimum)) #pick random mutation position
-                new_value = np.random.randint(0.00, 500.00)
-                organism[i][i] -= new_value
-                organism[i + 1][i] -= new_value
-                # =============================================================================
-                #                 while new_value == organism[i][point]:
-                #                     new_value = np.random.randint(0.00, 500.00)
-                #
-                #                 organism[i][point] = new_value
-                # =============================================================================
-                # organism[i] = int(organism[i]) + new_value
-                # print(new_value)
-                # print('Sigma : '+ str(organism[i]))
-                print('New organism ' + str(organism))
-            else:
-                print('No se realiza accion')
-                # print('Organism ' + str(organism))
-                # organism = organism[:]
-            return organism
+        if random.random() <=self.mutation_rate:
+            [mu, sigma] = organism
+            substract_value = random.uniform(self.limit_min, self.limit_max)
+            mu = [x - substract_value for x in mu]
+            sigma = [x - substract_value for x in sigma]
+            organism = [mu, sigma]
+        else:
+            print('No se realiza accion')
+            # print('Organism ' + str(organism))
+            # organism = organism[:]
+        return organism
 
     def gene_duplication(self, organism):
         print("Iniciando gen duplication")
@@ -134,11 +121,11 @@ class Organism:
 
         father_organism = organism[:]
 
-        organism = self.mutation(organism)
-        print('------')
         organism = self.gene_duplication(organism)
         print('------')
         organism = self.gene_deletion(organism)
+        print('------')
+        organism = self.mutation(organism)
         print('------')
 
         print('Father : ' + str(father_organism))
@@ -178,11 +165,11 @@ class Organism:
 
     def run(self):
         father_organism = self.create_organism()
-        # print(father_organism)
+        #print(father_organism)
 
         organism = father_organism[:]
         for i in range(self.n_generations):
-            # print('_______________________')
+             print('_______________________')
             # print('Generacion: ', i)
             # =============================================================================
             #             organism = self.mutation(organism)
@@ -190,7 +177,7 @@ class Organism:
             #             organsm = self.gene_duplication(organism)
             #             organism = self.gene_deletion(organism)
             # =============================================================================
-            organism = self.reproduction(organism, father_organism)
+            # organism = self.reproduction(organism, father_organism)
             # son_fitness = self.fitness_function(organism,self.n_dim,self.mu_mean, self.sigma_covariance)
             # organism_after_mutation = self.mutation(organism)
             # organism_after_gen_dup = self.gene_duplication(organism)
@@ -224,18 +211,20 @@ def main():
         mu_mean=100.0,
         sigma_covariance=600.0,
         n_dim=2,
-        mutation_rate=0.5,  # keep rates minimum
-        gen_duplication_rate=0.3,
+        mutation_rate=20,  # keep rates minimum
+        gen_duplication_rate=20,
         gen_deletion_rate=20,
         n_generations=1,
+        limit_min= 0.00,
+        limit_max= 500.00,
         verbose=True)
     # model.create_organism()
     # model.selection(model.create_organism())
     # model.fitness(model.create_organism())
-    model.run()
+    # model.run()
     # model.fitness_function(2, 20, 10)
     # model.mutation(model.create_organism())
-    # model.gene_duplication(model.create_organism())
+    model.gene_duplication(model.create_organism())
     # model.gene_deletion(model.create_organism())
 
 
