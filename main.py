@@ -47,8 +47,8 @@ class Organism:
     # creacion del organismo
     def create_organism(self):
         mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
-        #sigma = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
-        sigma = [np.random.uniform(self.limit_min, self.limit_max)]
+        sigma = [np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max)]
+        #sigma = [np.random.uniform(self.limit_min, self.limit_max)]
         organism = mu, sigma
         # organism = [[np.random.randint(min, max)]*self.n_dim, [np.random.randint(min, max)]*self.n_dim]
         # [np.random.randint(min, max) for _ in range(len(self.optimum))]
@@ -57,13 +57,15 @@ class Organism:
     # mutación, duplicación o deletion of the gene
     def mutation(self, organism):
         print("Iniciando mutacion")
-        print('Organismo : ' + str(organism))
+        #print('Organismo : ' + str(organism))
         if random.random() <=self.mutation_rate:
             [mu, sigma] = organism
+            print('Organismo : ' + str([mu, sigma]))
             substract_value = random.uniform(self.limit_min, self.limit_max)
             mu = [x - substract_value for x in mu]
             sigma = [x - substract_value for x in sigma]
             organism = [mu, sigma]
+            print('Organismo mutado: ' + str(organism))
         else:
             print('No se realiza accion')
             # print('Organism ' + str(organism))
@@ -73,16 +75,16 @@ class Organism:
     def gene_duplication(self, organism):
         print("Iniciando gen duplication")
         print('Organismo : ' + str(organism))
+        [mu, sigma] = organism
         if random.random() <= self.gen_duplication_rate:
-            point = np.random.randint(len(organism[1]))
-            # point = len(organism[1])
-            new_gene = organism[1][point]
-            organism[1].append(new_gene)
-            # print('New organism ' + str(organism[1]))
-            # print(point)
-            # print(new_gene)
-            # print(len(organism[1]))
+            point = np.random.randint(len(sigma))
+            #new_gene = sigma[point]
+            #sigma.append(new_gene)
+            sigma.append(sigma[point])
+            #sigma.append(sigma[np.random.randint(len(sigma))])
             print('Posicion a duplicar : ' + str(point))
+            #mu = mu_array.tolist()
+            organism = [mu, sigma]
             print('New organism ' + str(organism))
         else:
             print('No se realiza accion')
@@ -93,10 +95,12 @@ class Organism:
     def gene_deletion(self, organism):
         print("Iniciando gen deletion")
         print('Organismo : ' + str(organism))
+        [mu, sigma] = organism
         if random.random() <= self.gen_deletion_rate:
-            point = np.random.randint(len(organism[1]))
-            selected_gene = organism[1][point]
-            organism[1].remove(selected_gene)
+            point = np.random.randint(len(sigma))
+            selected_gene = sigma[point]
+            sigma.remove(selected_gene)
+            organism = [mu, sigma]
             print('Posicion a eliminar : ' + str(point))
             print('New organism ' + str(organism))
         else:
@@ -119,7 +123,7 @@ class Organism:
 
     def reproduction(self, organism, father_organism):
 
-        father_organism = organism[:]
+        #father_organism = organism[:]
 
         organism = self.gene_duplication(organism)
         print('------')
@@ -167,17 +171,27 @@ class Organism:
         father_organism = self.create_organism()
         #print(father_organism)
 
-        organism = father_organism[:]
+        organism = father_organism
         for i in range(self.n_generations):
-             print('_______________________')
-            # print('Generacion: ', i)
+            if self.verbose:
+                print('___________')
+                print('Generacion: ', i)
+                print('Organismo padre: ', father_organism)
+                print('Organismo hijo: ', organism)
+                print()
+
+            else:
+                print('_______________________')
+                print('Generacion: ', i)
+                organism = self.reproduction(organism, father_organism)
             # =============================================================================
             #             organism = self.mutation(organism)
             #
             #             organsm = self.gene_duplication(organism)
             #             organism = self.gene_deletion(organism)
             # =============================================================================
-            # organism = self.reproduction(organism, father_organism)
+
+
             # son_fitness = self.fitness_function(organism,self.n_dim,self.mu_mean, self.sigma_covariance)
             # organism_after_mutation = self.mutation(organism)
             # organism_after_gen_dup = self.gene_duplication(organism)
@@ -194,14 +208,7 @@ class Organism:
             # print(fitness_value)
 
 
-# =============================================================================
-#             if self.verbose:
-#                 print('___________')
-#                 print('Generacion: ', i)
-#                 print('Organismo padre: ', father_organism)
-#                 print('Organismo hijo: ', organism)
-#                 print()
-# =============================================================================
+
 
 def main():
     optimum = [0.0, [0.0, 0.0, 0.0, 0.0]]
@@ -211,20 +218,20 @@ def main():
         mu_mean=100.0,
         sigma_covariance=600.0,
         n_dim=2,
-        mutation_rate=20,  # keep rates minimum
-        gen_duplication_rate=20,
-        gen_deletion_rate=20,
-        n_generations=1,
+        mutation_rate=0.2,  # keep rates minimum
+        gen_duplication_rate=0.4,
+        gen_deletion_rate=0.1,
+        n_generations=5,
         limit_min= 0.00,
         limit_max= 500.00,
-        verbose=True)
+        verbose=False)
     # model.create_organism()
     # model.selection(model.create_organism())
     # model.fitness(model.create_organism())
-    # model.run()
+    model.run()
     # model.fitness_function(2, 20, 10)
     # model.mutation(model.create_organism())
-    model.gene_duplication(model.create_organism())
+    # model.gene_duplication(model.create_organism())
     # model.gene_deletion(model.create_organism())
 
 
