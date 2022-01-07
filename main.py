@@ -1,21 +1,3 @@
-# # This is a sample Python script.
-#
-# # Press Mayús+F10 to execute it or replace it with your code.
-# # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-#
-#
-# def print_hi(name):
-#     # Use a breakpoint in the code line below to debug your script.
-#     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-#
-#
-# # Press the green button in the gutter to run the script.
-# if __name__ == '__main__':
-#     print_hi('PyCharm')
-#
-# # See PyCharm help at https://www.jetbrains.com/help/pycharm/
-
-# -*- coding: utf-8 -*-
 """
 Created on Tue Nov 30 16:58:58 2021
 
@@ -30,31 +12,36 @@ import random
 
 class Organism:
     def __init__(self, optimum, n_organisms, mu_mean, sigma_covariance, n_dim, mutation_rate, gen_duplication_rate,
-                 gen_deletion_rate, n_generations, limit_min, limit_max, verbose=True):
-        self.optimum = optimum
+                 gen_deletion_rate, n_generations, limit_min, limit_max, epsilon, verbose=True):
+        self.optimum = optimum #ideal vector (set to 0)
         self.n_organisms = n_organisms
         self.mu_mean = mu_mean
         self.sigma_covariance = sigma_covariance
         self.n_dim = n_dim
-        self.mutation_rate = mutation_rate
-        self.gen_duplication_rate = gen_duplication_rate
-        self.gen_deletion_rate = gen_deletion_rate
+        self.mutation_rate = mutation_rate #keep to minimum
+        self.gen_duplication_rate = gen_duplication_rate #keep to minimum
+        self.gen_deletion_rate = gen_deletion_rate #keep to minimum
         self.n_generations = n_generations
         self.limit_min = limit_min
         self.limit_max = limit_max
+        self.epsilon = epsilon #maximum range of distance to the optimum
         self.verbose = verbose
 
-    # creacion del organismo
+    #================================= creacion del organismo ====================================================
     def create_organism(self):
         mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
         sigma = [np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max)]
-        #sigma = [np.random.uniform(self.limit_min, self.limit_max)]
         organism = mu, sigma
-        # organism = [[np.random.randint(min, max)]*self.n_dim, [np.random.randint(min, max)]*self.n_dim]
-        # [np.random.randint(min, max) for _ in range(len(self.optimum))]
         return organism
 
-    # mutación, duplicación o deletion of the gene
+    def create_optimum(self, organism):
+        [mu_org, sigma_org] = organism
+        mu = np.random.uniform(self.limit_min, self.limit_min, self.n_dim)
+        sigma = sigma_org * 0
+        optimum = mu, sigma
+        return optimum
+
+    #========================== mutación, duplicación o deletion of the gene ========================================
     def mutation(self, organism):
         print("Iniciando mutacion")
         #print('Organismo : ' + str(organism))
@@ -62,12 +49,16 @@ class Organism:
             [mu, sigma] = organism
             print('Organismo : ' + str([mu, sigma]))
             substract_value = random.uniform(self.limit_min, self.limit_max)
-            mu = [x - substract_value for x in mu]
+            vector_substract_value = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
+            print ('vector a substraer = ' + str(vector_substract_value))
+            print('valor a substraer = ' + str(substract_value))
+            #mu = [x - substract_value for x in mu]
+            mu = mu - vector_substract_value
             sigma = [x - substract_value for x in sigma]
             organism = [mu, sigma]
             print('Organismo mutado: ' + str(organism))
         else:
-            print('No se realiza accion')
+            print('No se realiza mutación')
             # print('Organism ' + str(organism))
             # organism = organism[:]
         return organism
@@ -87,7 +78,7 @@ class Organism:
             organism = [mu, sigma]
             print('New organism ' + str(organism))
         else:
-            print('No se realiza accion')
+            print('No se realiza duplicación del gen')
             # print('Organism ' + str(organism))
             # organism = organism[:]
         return organism
@@ -104,22 +95,25 @@ class Organism:
             print('Posicion a eliminar : ' + str(point))
             print('New organism ' + str(organism))
         else:
-            print('No se realiza accion')
+            print('No se realiza supresión del gen')
             # print('Organism ' + str(organism))
             # organism = organism[:]
         return organism
+
+    #=================================== Fitness function evaluation ===============================================
 
     def fitness(self, organism):
         """
         Funcion que determina cuántos valores son iguales a los del óptimo
         """
+        fitnes = organism - self.optimum
 
-        fitness = 0
-
-        for i in range(len(organism)):
-            if organism[i] == self.optimum[i]:
-                fitness += 1
-            return fitness
+        # fitness = 0
+        #
+        # for i in range(len(organism)):
+        #     if organism[i] == self.optimum[i]:
+        #         fitness += 1
+        #     return fitness
 
     def reproduction(self, organism, father_organism):
 
@@ -167,6 +161,7 @@ class Organism:
         return fitness_value
         # https://peterroelants.github.io/posts/multivariate-normal-primer/
 
+    #======================================== Flux ================================================================
     def run(self):
         father_organism = self.create_organism()
         #print(father_organism)
@@ -209,19 +204,19 @@ class Organism:
 
 
 
-
+#=========== Main definition of the
 def main():
-    optimum = [0.0, [0.0, 0.0, 0.0, 0.0]]
+    optimum =
     model = Organism(
         optimum=optimum,
         n_organisms=1,
         mu_mean=100.0,
         sigma_covariance=600.0,
         n_dim=2,
-        mutation_rate=0.2,  # keep rates minimum
-        gen_duplication_rate=0.4,
+        mutation_rate=20,  # keep rates minimum
+        gen_duplication_rate=0.1,
         gen_deletion_rate=0.1,
-        n_generations=5,
+        n_generations=1,
         limit_min= 0.00,
         limit_max= 500.00,
         verbose=False)
