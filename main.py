@@ -29,8 +29,24 @@ class Organism:
 
     #================================= creacion del organismo ====================================================
     def create_organism(self):
+
+        #mean = np.random.uniform(self.limit_min, self.limit_min, self.n_dim)
+        #cov = [[0 for x in range(self.n_dim)] for y in range(self.n_dim)] #create a matrix of NxN with 0 values
+        #cov_row = np.random.uniform(self.limit_min, 1.0, self.n_dim)
+        #covariance_matrix = np.tril(cov_row) + np.tril(cov_row, -1).T
+        #symm = covariance_matrix @ covariance_matrix.T
+        #print('Row : ' + str(cov_row))
+        #print('Matrix : ' + str(covariance_matrix))
+
+        # test for symmetry
+        #print(symm == symm.T)
+
+        #===== crear función que compruebe que una matriz sea simétrica y positiva-seidefinida
+        mu_gauss = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
+        print('Mean : ' + str(mu_gauss))
         mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
         sigma = [np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max)]
+        #organism = mu_gauss, sigma
         organism = mu, sigma
         return organism
 
@@ -206,13 +222,13 @@ class Organism:
 
 #=========== Main definition of the
 def main():
-    optimum = [[0.0, 0.0], [0.0,0.0,0.0]]
+    optimum = [[0.0, 0.0], [0.0,0.0,0.0]] #first vector most match the n_dim
     model = Organism(
         optimum = optimum,
         n_organisms = 1,
-        mu_mean = 100.0,
-        sigma_covariance = 600.0,
-        n_dim = 2,
+        mu_mean = [0.0, 0.0, 0.0], #the vector must match number of dimentions selected
+        sigma_covariance = [[2, -1, 0],[-1, 2, -1],[0, -1, 2]], #the matrix covariance must be a positive semidefinite symmetric one
+        n_dim = 3,
         mutation_rate = 20,  # keep rates minimum
         gen_duplication_rate = 0.1,
         gen_deletion_rate=0.1,
@@ -221,12 +237,12 @@ def main():
         limit_max= 500.00,
         epsilon = 10.0,
         verbose=False)
-    # model.create_organism()
+    #model.create_organism()
     # model.selection(model.create_organism())
     # model.fitness(model.create_organism())
-    model.run()
+    #model.run()
     # model.fitness_function(2, 20, 10)
-    # model.mutation(model.create_organism())
+    model.mutation(model.create_organism())
     # model.gene_duplication(model.create_organism())
     # model.gene_deletion(model.create_organism())
 
