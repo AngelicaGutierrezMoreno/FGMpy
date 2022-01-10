@@ -206,19 +206,20 @@ class Organism:
 
 #=========== Main definition of the
 def main():
-    optimum =
+    optimum = [[0.0, 0.0], [0.0,0.0,0.0]]
     model = Organism(
-        optimum=optimum,
-        n_organisms=1,
-        mu_mean=100.0,
-        sigma_covariance=600.0,
-        n_dim=2,
-        mutation_rate=20,  # keep rates minimum
-        gen_duplication_rate=0.1,
+        optimum = optimum,
+        n_organisms = 1,
+        mu_mean = 100.0,
+        sigma_covariance = 600.0,
+        n_dim = 2,
+        mutation_rate = 20,  # keep rates minimum
+        gen_duplication_rate = 0.1,
         gen_deletion_rate=0.1,
         n_generations=1,
         limit_min= 0.00,
         limit_max= 500.00,
+        epsilon = 10.0,
         verbose=False)
     # model.create_organism()
     # model.selection(model.create_organism())
