@@ -43,19 +43,18 @@ class Organism:
 
         #===== crear función que compruebe que una matriz sea simétrica y positiva-seidefinida
         mu_gauss = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
-        print('Mean : ' + str(mu_gauss))
-        mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
-        sigma = [np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max), np.random.uniform(self.limit_min, self.limit_max)]
-        #organism = mu_gauss, sigma
-        organism = mu, sigma
+        #mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
+        sigma = np.random.uniform(self.limit_min, self.limit_max, 1) #start genotype with onl 1 gene
+        organism = mu_gauss, sigma
+        #organism = mu, sigma
         return organism
 
-    def create_optimum(self, organism):
-        [mu_org, sigma_org] = organism
-        mu = np.random.uniform(self.limit_min, self.limit_min, self.n_dim)
-        sigma = sigma_org * 0
-        optimum = mu, sigma
-        return optimum
+    # def create_optimum(self, organism):
+    #     [mu_org, sigma_org] = organism
+    #     mu = np.random.uniform(self.limit_min, self.limit_min, self.n_dim)
+    #     sigma = sigma_org * 0
+    #     optimum = mu, sigma
+    #     return optimum
 
     #========================== mutación, duplicación o deletion of the gene ========================================
     def mutation(self, organism):
@@ -65,7 +64,7 @@ class Organism:
             [mu, sigma] = organism
             print('Organismo : ' + str([mu, sigma]))
             substract_value = random.uniform(self.limit_min, self.limit_max)
-            vector_substract_value = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
+            vector_substract_value = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
             print ('vector a substraer = ' + str(vector_substract_value))
             print('valor a substraer = ' + str(substract_value))
             #mu = [x - substract_value for x in mu]
@@ -106,6 +105,7 @@ class Organism:
         if random.random() <= self.gen_deletion_rate:
             point = np.random.randint(len(sigma))
             selected_gene = sigma[point]
+            print('Selected gene: ' + selected_gene)
             sigma.remove(selected_gene)
             organism = [mu, sigma]
             print('Posicion a eliminar : ' + str(point))
@@ -122,8 +122,18 @@ class Organism:
         """
         Funcion que determina cuántos valores son iguales a los del óptimo
         """
-        fitnes = organism - self.optimum
+        [mu, sigma] = organism
+        [mu_optimum, sigma_optimum] = self.optimum
+        mu_fitness = np.subtract(mu, mu_optimum)
+        sigma_fitness = np.subtract(sigma, sigma_optimum)
+        #print('Mu substraction : ' + str(mu) + ' - ' + str(mu_optimum) + ' = ' + str(mu_fitness))
+        #print('Sigma substraction : ' + str(sigma) + ' - ' + str(sigma_optimum) + ' = ' + str(sigma_fitness))
+        fitness = [mu_fitness, sigma_fitness]
+        print('Fitness : ' + str(fitness))
 
+        fitness_value = self.fitness_function(organism)
+        print('Fitness = ' + str(fitness_value))
+        return fitness_value
         # fitness = 0
         #
         # for i in range(len(organism)):
@@ -151,17 +161,29 @@ class Organism:
         """
         si la evaluación del fitness hijo es mayor a la del fitness padre, hacer seleccion
         """
-        scores = [(self.fitness(i), i) for i in organism]
-        scores = [i[1] for i in sorted(scores)]
+        #scores = [(self.fitness(i), i) for i in organism]
+        #scores = [i[1] for i in sorted(scores)]
 
-        return scores[len(scores) - self.n_selection:]
+        #return scores[len(scores) - self.n_selection:]
 
         # evaluación fitness padre e hijo
         # scores = [self.fitness(organism), organism]
         # comparar organismo padre e hijo
         # seleccionar el que tenga mejor fitness
         # designarlo como el nuevo organismo padre
-        print(scores)
+        #print(scores)
+
+        score_son = self.fitness(organism)
+        #print('Score son : ' + str(score_son))
+        score_father = self.fitness(father_organism)
+        #print('Score father : ' + str(score_father))
+
+        if score_son > score_father:
+            return organism
+        else:
+            return father_organism
+
+
 
     # =============================================================================
     #     def create_population(self):
@@ -170,20 +192,22 @@ class Organism:
 
     def fitness_function(self, organism):
         """pdf of the multivariate normal distribution."""
-        x_m = int(str(organism)) - self.mu_mean
+        [mu, sigma] = organism
+        x_m = mu - self.mu_mean
+        print('Mu = ' + str(mu) + ' mu mean = ' + str(self.mu_mean) + ' x_m = ' + str(x_m))
         fitness_value = (1. / (np.sqrt((2 * np.pi) ** self.n_dim * np.linalg.det(self.sigma_covariance))) * np.exp(
             -(np.linalg.solve(self.sigma_covariance, x_m).T.dot(x_m)) / 2))
-        print(fitness_value)
+        #print('Fitness = ' + str(fitness_value))
         return fitness_value
         # https://peterroelants.github.io/posts/multivariate-normal-primer/
 
     #======================================== Flux ================================================================
     def run(self):
         father_organism = self.create_organism()
-        #print(father_organism)
-
-        organism = father_organism
+        epsilon =
         for i in range(self.n_generations):
+            # print(father_organism)
+            organism = father_organism
             if self.verbose:
                 print('___________')
                 print('Generacion: ', i)
@@ -191,17 +215,20 @@ class Organism:
                 print('Organismo hijo: ', organism)
                 print()
 
+
             else:
                 print('_______________________')
                 print('Generacion: ', i)
                 organism = self.reproduction(organism, father_organism)
+                selected_organism = self.selection(organism, father_organism)
+                print('Best suited organism is : ' + str(selected_organism))
+                father_organism = selected_organism
             # =============================================================================
             #             organism = self.mutation(organism)
             #
             #             organsm = self.gene_duplication(organism)
             #             organism = self.gene_deletion(organism)
             # =============================================================================
-
 
             # son_fitness = self.fitness_function(organism,self.n_dim,self.mu_mean, self.sigma_covariance)
             # organism_after_mutation = self.mutation(organism)
@@ -222,27 +249,27 @@ class Organism:
 
 #=========== Main definition of the
 def main():
-    optimum = [[0.0, 0.0], [0.0,0.0,0.0]] #first vector most match the n_dim
+    optimum = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]] #first vector most match the n_dim
     model = Organism(
         optimum = optimum,
         n_organisms = 1,
         mu_mean = [0.0, 0.0, 0.0], #the vector must match number of dimentions selected
-        sigma_covariance = [[2, -1, 0],[-1, 2, -1],[0, -1, 2]], #the matrix covariance must be a positive semidefinite symmetric one
+        sigma_covariance = [[2000.0, -1000.0, 0.0],[-1000, 2000.0, -1000.0],[0.0, -1000.0, 2000.0]], #the matrix covariance must be a positive semidefinite symmetric one
         n_dim = 3,
         mutation_rate = 20,  # keep rates minimum
         gen_duplication_rate = 0.1,
         gen_deletion_rate=0.1,
         n_generations=1,
-        limit_min= 0.00,
-        limit_max= 500.00,
+        limit_min= 0.00, #limite inferior para los valores del gen
+        limit_max= 500.00, #limite superior para los valores del gen
         epsilon = 10.0,
         verbose=False)
     #model.create_organism()
-    # model.selection(model.create_organism())
-    # model.fitness(model.create_organism())
-    #model.run()
+    #model.selection(model.create_organism())
+    #model.fitness(model.create_organism())
+    model.run()
     # model.fitness_function(2, 20, 10)
-    model.mutation(model.create_organism())
+    #model.mutation(model.create_organism())
     # model.gene_duplication(model.create_organism())
     # model.gene_deletion(model.create_organism())
 
