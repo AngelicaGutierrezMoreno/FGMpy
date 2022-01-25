@@ -14,7 +14,7 @@ import random
 
 class Organism:
     def __init__(self, optimum, n_organisms, mu_mean, sigma_covariance, n_dim, mutation_rate, gen_duplication_rate,
-                 gen_deletion_rate, n_generations, limit_min, limit_max, epsilon, verbose=True):
+                 gen_deletion_rate, n_generations, limit_min, limit_max, epsilon, mutation_type, verbose=True):
         self.optimum = optimum  # ideal vector (set to 0)
         self.n_organisms = n_organisms
         self.mu_mean = mu_mean
@@ -27,6 +27,7 @@ class Organism:
         self.limit_min = limit_min
         self.limit_max = limit_max
         self.epsilon = epsilon  # maximum range of distance to the optimum
+        self.mutation_type = mutation_type # def. if only mutate phenotype, genothype, both or randomly mutate one gene
         self.verbose = verbose
 
     # ================================= creacion del organismo ====================================================
@@ -46,14 +47,18 @@ class Organism:
         # ===== crear función que compruebe que una matriz sea simétrica y positiva-seidefinida
 
         mu_gauss = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
-        # print ("Mu " + str(mu_gauss))
-        mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
-        sigma = np.array(np.random.uniform(self.limit_min, self.limit_max, 1))  # start genotype with onl 1 gene
-        # print("Sigma " + str(sigma))
-        mu_gauss = np.delete(mu_gauss, self.n_dim - 1)
+        #print ("Mu " + str(mu_gauss))
+        #mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
+        #sigma = np.array(np.random.uniform(self.limit_min, self.limit_max, 1))  # start genotype with onl 1 gene
+        sigma = [np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')]
+        #print("Sigma " + str(sigma))
+        #mu_gauss = np.delete(mu_gauss, self.n_dim - 1)
         # print("New mu = " + str(mu_gauss))
-        organism = np.append(mu_gauss, sigma)
-        # print("Organism " + str(organism))
+        #organism = np.append(mu_gauss, sigma)
+        #organism = np.array(mu_gauss,sigma)
+        organism = mu_gauss, sigma
+        #organism = mu_gauss
+        print("Organism " + str(organism))
         # organism = mu_gauss, sigma
         # organism = mu, sigma
         return organism
@@ -70,21 +75,24 @@ class Organism:
         print("Iniciando mutacion")
         # print('Organismo : ' + str(organism))
         if random.random() <= self.mutation_rate:
-            # [mu, sigma] = organism
-            mu = organism[0:self.n_dim - 1]
-            sigma = organism[self.n_dim - 1: len(organism)]
-            print('Organismo a mutar: ' + str([mu, sigma]))
-            substract_value = random.uniform(self.limit_min, self.limit_max)
+            [mu, sigma] = organism
+            #mu = organism[0:self.n_dim - 1]
+            #sigma = organism[self.n_dim - 1: len(organism)]
+            print('Organismo a mutar: ' + str(organism))
+            #substract_value = random.uniform(self.limit_min, self.limit_max)
             vector_substract_value = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
-            vector_substract_value = np.delete(vector_substract_value, self.n_dim - 1)
-            #print('vector a substraer = ' + str(vector_substract_value))
+            #vector_substract_value = np.delete(vector_substract_value, self.n_dim - 1)
+            print('vector a substraer = ' + str(vector_substract_value))
             #print('valor a substraer = ' + str(substract_value))
             # mu = [x - substract_value for x in mu]
-            mu = mu - vector_substract_value
-            sigma = [x - substract_value for x in sigma]
-            organism = np.append(mu, sigma)
-            # organism = [mu, sigma]
-            print('Organismo mutado: ' + str(organism))
+            if random.random() <= self.mutation_rate: #Se elige de manera random si se muta el fenotipo o el genotipo
+                mu = mu - vector_substract_value
+            else:
+                sigma = sigma - vector_substract_value
+            #sigma = [x - substract_value for x in sigma]
+            #organism = np.append(mu, sigma)
+            organism = [mu, sigma]
+            print('Organismo mutado desenlazado: ' + str(organism))
         else:
             print('No se realiza mutación')
             # print('Organism ' + str(organism))
@@ -94,13 +102,14 @@ class Organism:
     def gene_duplication(self, organism):
         print("Iniciando gen duplication")
         print('Organismo : ' + str(organism))
-        # [mu, sigma] = organism
-        mu = organism[0:self.n_dim - 1]
-        sigma = organism[self.n_dim - 1: len(organism)]
+        [mu, sigma] = organism
+        #mu = organism[0:self.n_dim - 1]
+        #sigma = organism[self.n_dim - 1: len(organism)]
         if random.random() <= self.gen_duplication_rate:
             if len(sigma) == 1:
-                sigma = np.append(sigma, sigma)
-                organism = np.append(mu, sigma)
+                sigma = sigma, sigma
+                organism = [mu, sigma]
+                #organism = np.append(mu, sigma)
                 print('New organism ' + str(organism))
             else:
                 print(len(sigma))
@@ -108,12 +117,14 @@ class Organism:
                 print("Point " + str(point))
                 # new_gene = sigma[point]
                 # sigma.append(new_gene)
-                sigma.append(sigma[point])
+                #sigma.append(sigma[point])
+                sigma = sigma, sigma[point]
                 # sigma.append(sigma[np.random.randint(len(sigma))])
                 print('Posicion a duplicar : ' + str(point))
                 # mu = mu_array.tolist()
                 #organism = [mu + sigma]
-                np.append(mu, sigma)
+                #np.append(mu, sigma)
+                organism = [mu, sigma]
                 print('New organism ' + str(organism))
         else:
             print('No se realiza duplicación del gen')
@@ -124,19 +135,26 @@ class Organism:
     def gene_deletion(self, organism):
         print("Iniciando gen deletion")
         print('Organismo : ' + str(organism))
-        # [mu, sigma] = organism
-        mu = organism[0:self.n_dim - 1]
-        sigma = organism[self.n_dim - 1: len(organism)]
+        [mu, sigma] = organism
+        print('Sigma before deletion ' + str(sigma))
+        #mu = organism[0:self.n_dim - 1]
+        #sigma = organism[self.n_dim - 1: len(organism)]
         if random.random() <= self.gen_deletion_rate:
-            point = np.random.randint(len(sigma))
-            selected_gene = sigma[point]
-            print('Selected gene: ' + str(selected_gene))
-            if len(sigma) == 0 :
+            if len(sigma) == 0:
                 print("No gen to delete")
+                organism = [mu, sigma]
+                #organism = np.append(mu, sigma)
             else:
-                sigma.remove(sigma, selected_gene)
+                print(len(sigma))
+                point = np.random.randint(len(sigma))
+                print('Point ' + str(point))
+                selected_gene = sigma[point]
+                print('Selected gene: ' + str(selected_gene))
+                sigma = np.delete(sigma, point,0)
+                print('Sigma after deletion ' + str(sigma))
                 # organism = [mu, sigma]
-                organism = np.append(mu, sigma)
+                # organism = np.append(mu, sigma)
+                organism = [mu, sigma]
                 print('Posicion a eliminar : ' + str(point))
                 print('New organism ' + str(organism))
         else:
@@ -257,6 +275,7 @@ class Organism:
                 selected_organism = self.selection(organism, father_organism)
                 print('Best suited organism is : ' + str(selected_organism))
                 father_organism = selected_organism
+                #father_organism = organism
             # =============================================================================
             #             organism = self.mutation(organism)
             #
@@ -290,13 +309,14 @@ def main():
         sigma_covariance=[[2000.0, -1000.0, 0.0], [-1000, 2000.0, -1000.0], [0.0, -1000.0, 2000.0]],
         # the matrix covariance must be a positive semidefinite symmetric one
         n_dim=3,
-        mutation_rate=0.10,  # keep rates minimum
-        gen_duplication_rate=0.7,
-        gen_deletion_rate=0.5,
-        n_generations=1,
+        mutation_rate=20,  # keep rates minimum
+        gen_duplication_rate=0.0,
+        gen_deletion_rate=0.0,
+        n_generations=2,
         limit_min=0.00,  # limite inferior para los valores del gen
         limit_max=500.00,  # limite superior para los valores del gen
         epsilon=10.0,
+        mutation_type=0, # 0 -> phenotype, 1 -> genotype, 2 -> one random gene, 3 -> both
         verbose=False)
     # model.create_organism()
     # model.selection(model.create_organism())
