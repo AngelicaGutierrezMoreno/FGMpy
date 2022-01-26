@@ -31,6 +31,11 @@ class Organism:
         self.verbose = verbose
 
     # ================================= creacion del organismo ====================================================
+    def initial_genotype(self):
+        genotype = [np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')]
+        return genotype
+
+
     def create_organism(self):
 
         # mean = np.random.uniform(self.limit_min, self.limit_min, self.n_dim)
@@ -57,6 +62,7 @@ class Organism:
         #organism = np.append(mu_gauss, sigma)
         #organism = np.array(mu_gauss,sigma)
         organism = mu_gauss, sigma
+        #organism = mu_gauss
         #organism = mu_gauss
         print("Organism " + str(organism))
         # organism = mu_gauss, sigma
@@ -106,7 +112,9 @@ class Organism:
         #mu = organism[0:self.n_dim - 1]
         #sigma = organism[self.n_dim - 1: len(organism)]
         if random.random() <= self.gen_duplication_rate:
-            if len(sigma) == 1:
+            if len(sigma) == 0:
+                print('No gen to duplicate')
+            elif len(sigma) == 1:
                 sigma = sigma, sigma
                 organism = [mu, sigma]
                 #organism = np.append(mu, sigma)
@@ -136,10 +144,10 @@ class Organism:
         print("Iniciando gen deletion")
         print('Organismo : ' + str(organism))
         [mu, sigma] = organism
-        print('Sigma before deletion ' + str(sigma))
         #mu = organism[0:self.n_dim - 1]
         #sigma = organism[self.n_dim - 1: len(organism)]
         if random.random() <= self.gen_deletion_rate:
+            print('Sigma before deletion ' + str(sigma))
             if len(sigma) == 0:
                 print("No gen to delete")
                 organism = [mu, sigma]
@@ -239,12 +247,16 @@ class Organism:
 
     def fitness_function(self, organism):
         """pdf of the multivariate normal distribution."""
-        #[mu, sigma] = organism
-        mu = organism[0:self.n_dim - 1]
-        sigma = organism[self.n_dim - 1: len(organism)]
-        sigma_mean = np.mean(sigma)
-        org = np.append(mu, sigma_mean)
-        x_m = org - self.mu_mean
+        [mu, sigma] = organism
+        #mu = organism[0:self.n_dim - 1]
+        #sigma = organism[self.n_dim - 1: len(organism)]
+        #sigma_mean = np.mean(sigma)
+        #org = np.append(mu, sigma_mean)
+        sigma = np.add.reduce(sigma)
+        print('Matrix sum ' + str(sigma))
+        mu = mu + sigma
+        print('Vector N ' + str(mu))
+        x_m = mu - self.mu_mean
         print('Mu = ' + str(mu) + ' mu mean = ' + str(self.mu_mean) + ' x_m = ' + str(x_m))
         fitness_value = (1. / (np.sqrt((2 * np.pi) ** self.n_dim * np.linalg.det(self.sigma_covariance))) * np.exp(
             -(np.linalg.solve(self.sigma_covariance, x_m).T.dot(x_m)) / 2))
@@ -255,14 +267,19 @@ class Organism:
     # ======================================== Flux ================================================================
     def run(self):
         father_organism = self.create_organism()
+        print('Padre ' + str(father_organism))
         epsilon = [self.epsilon for x in range(self.n_dim)]
         print('Epsilon' + str(epsilon))
+        #zona_tolerancia = np.subtract(self.optimum - epsilon)
+        #print('Resta ' + str(zona_tolerancia))
+
+        #while father_organism <= epsilon:
         for i in range(self.n_generations):
             # print(father_organism)
             organism = father_organism
             if self.verbose:
                 print('___________')
-                print('Generacion: ', i)
+                #print('Generacion: ', i)
                 print('Organismo padre: ', father_organism)
                 print('Organismo hijo: ', organism)
                 print()
@@ -270,7 +287,7 @@ class Organism:
 
             else:
                 print('_______________________')
-                print('Generacion: ', i)
+                #print('Generacion: ', i)
                 organism = self.reproduction(organism, father_organism)
                 selected_organism = self.selection(organism, father_organism)
                 print('Best suited organism is : ' + str(selected_organism))
@@ -309,10 +326,10 @@ def main():
         sigma_covariance=[[2000.0, -1000.0, 0.0], [-1000, 2000.0, -1000.0], [0.0, -1000.0, 2000.0]],
         # the matrix covariance must be a positive semidefinite symmetric one
         n_dim=3,
-        mutation_rate=20,  # keep rates minimum
-        gen_duplication_rate=0.0,
-        gen_deletion_rate=0.0,
-        n_generations=2,
+        mutation_rate=0.5,  # keep rates minimum
+        gen_duplication_rate=0.7,
+        gen_deletion_rate=0.2,
+        n_generations=1,
         limit_min=0.00,  # limite inferior para los valores del gen
         limit_max=500.00,  # limite superior para los valores del gen
         epsilon=10.0,
