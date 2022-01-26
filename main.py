@@ -36,8 +36,9 @@ class Organism:
         return genotype
 
 
-    def create_organism(self):
-
+    def create_organism(self, genotype):
+        phenotype = np.add.reduce(genotype)
+        organism = phenotype
         # mean = np.random.uniform(self.limit_min, self.limit_min, self.n_dim)
         # cov = [[0 for x in range(self.n_dim)] for y in range(self.n_dim)] #create a matrix of NxN with 0 values
         # cov_row = np.random.uniform(self.limit_min, 1.0, self.n_dim)
@@ -51,17 +52,17 @@ class Organism:
 
         # ===== crear función que compruebe que una matriz sea simétrica y positiva-seidefinida
 
-        mu_gauss = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
+        #mu_gauss = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
         #print ("Mu " + str(mu_gauss))
         #mu = np.random.uniform(self.limit_min, self.limit_max, self.n_dim)
         #sigma = np.array(np.random.uniform(self.limit_min, self.limit_max, 1))  # start genotype with onl 1 gene
-        sigma = [np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')]
+        #sigma = [np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')]
         #print("Sigma " + str(sigma))
         #mu_gauss = np.delete(mu_gauss, self.n_dim - 1)
         # print("New mu = " + str(mu_gauss))
         #organism = np.append(mu_gauss, sigma)
         #organism = np.array(mu_gauss,sigma)
-        organism = mu_gauss, sigma
+        #organism = mu_gauss, sigma
         #organism = mu_gauss
         #organism = mu_gauss
         print("Organism " + str(organism))
