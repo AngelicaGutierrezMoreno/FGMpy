@@ -48,18 +48,24 @@ class Organism:
         organism = np.add.reduce(genotype)
         if random.random() <= self.mutation_rate:
             print('Organismo a mutar: ' + str(organism))
+            print('Genotype ' + str(genotype))
             vector_substract_value = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
             print('vector a substraer = ' + str(vector_substract_value))
-            if random.random() <= self.mutation_rate: #Se elige de manera random si se muta el fenotipo o el genotipo
-                organism = organism - vector_substract_value
-                print('Organismo mutado ' + str(organism))
-            else:
-                gen = genotype[random.randint(len(genotype))]
-                print('Selected gen to mutate: ' + str(gen))
-                genotype = gen - vector_substract_value
-                organism = np.add.reduce(genotype)
-                print('Organismo mutado desenlazado: ' + str(organism))
+            #Sólo se va a mutar un gen del genotipo
+            gen_position = random.randint(0, len(genotype)-1)
+            print('Selected position of gen to mutate: ' + str(gen_position))
+            print('Selected gen : ' + str(genotype[gen_position]))
+            #mutated_gen = np.subtract(genotype[gen_position], vector_substract_value)
+            mutated_gen = genotype[gen_position] - vector_substract_value
+            print('Mutated gen : ' + str(mutated_gen))
+            #genotype[gen_position] = mutated_gen
+            #genotype = np.where(genotype[gen_position] == gen_position, mutated_gen, genotype)
+            print ('Mutated genotype : ' + str(genotype))
+
+            organism = np.add.reduce(genotype)
+            print('Organismo mutado desenlazado: ' + str(organism))
         else:
+            organism = np.add.reduce(genotype)
             print('No se realiza mutación')
         return organism
 
@@ -101,8 +107,8 @@ class Organism:
                 print('Point ' + str(point))
                 selected_gene = genotype[point]
                 print('Selected gene: ' + str(selected_gene))
-                new_genotype = np.delete(genotype, point, 0)
-                print('Genotype after deletion ' + str(new_genotype))
+                genotype = np.delete(genotype, point, 0)
+                print('Genotype after deletion ' + str(genotype))
                 organism = np.add.reduce(genotype)
                 print('Posicion a eliminar : ' + str(point))
                 print('New organism ' + str(organism))
@@ -246,7 +252,7 @@ def main():
         n_dim=3,
         mutation_rate=10,  # keep rates minimum
         gen_duplication_rate=10,
-        gen_deletion_rate=10,
+        gen_deletion_rate=0.0,
         n_generations=1,
         limit_min=0.00,  # limite inferior para los valores del gen
         limit_max=500.00,  # limite superior para los valores del gen
