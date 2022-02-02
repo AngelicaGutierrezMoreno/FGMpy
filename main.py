@@ -45,22 +45,32 @@ class Organism:
     def mutation(self, genotype):
         print("Iniciando mutacion")
         # print('Organismo : ' + str(organism))
-        organism = np.add.reduce(genotype)
+        #organism = np.add.reduce(genotype)
         if random.random() <= self.mutation_rate:
-            print('Organismo a mutar: ' + str(organism))
+            #print('Organismo a mutar: ' + str(organism))
             print('Genotype ' + str(genotype))
-            vector_substract_value = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
+            vector_substract_value = [np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')]
             print('vector a substraer = ' + str(vector_substract_value))
             #Sólo se va a mutar un gen del genotipo
             gen_position = random.randint(0, len(genotype)-1)
             print('Selected position of gen to mutate: ' + str(gen_position))
-            print('Selected gen : ' + str(genotype[gen_position]))
-            #mutated_gen = np.subtract(genotype[gen_position], vector_substract_value)
-            mutated_gen = genotype[gen_position] - vector_substract_value
+            gen_to_mutate = genotype[gen_position]
+            print('Selected gen : ' + str(gen_to_mutate))
+            mutated_gen = np.subtract(gen_to_mutate, vector_substract_value)
+            #mutated_gen = genotype[gen_position] - vector_substract_value
             print('Mutated gen : ' + str(mutated_gen))
-            #genotype[gen_position] = mutated_gen
+            #print('Matrix value :' + ' GEN = ' + str(np.shape(gen_to_mutate)) + ' VECTOR = ' + str(
+            #    np.shape(vector_substract_value)) + ' Mutated GEN = ' + str(np.shape(mutated_gen)))
+            #genotype[genotype.] = mutated_gen
+            #genotype[np.where(genotype == genotype[gen_position])] = mutated_gen
+            #print('TYPES : ' + 'GEN to mutate type = ' + str(type(gen_to_mutate)) + ' Vector = ' + str(
+            #    type(vector_substract_value)) + ' mix ' + str(type(genotype[gen_position])))
+            genotype = list(genotype)
+            genotype[gen_position] = np.subtract(gen_to_mutate, vector_substract_value)
+            genotype = tuple(genotype)
+            #genotype[gen_position] = np.subtract(gen_to_mutate, vector_substract_value)
             #genotype = np.where(genotype[gen_position] == gen_position, mutated_gen, genotype)
-            print ('Mutated genotype : ' + str(genotype))
+            print('Mutated genotype : ' + str(genotype))
 
             organism = np.add.reduce(genotype)
             print('Organismo mutado desenlazado: ' + str(organism))
@@ -175,9 +185,15 @@ class Organism:
     def fitness_function(self, organism):
         """pdf of the multivariate normal distribution."""
         #organism = organism.squeeze(organism)
-        x_m = np.subtract(organism, self.mu_mean)
+
+        ### COMPROBAR MATRICES !!!!!!!!!!!!!!!!!! ####
+        mu_mean = [self.mu_mean]
+        x_m = np.subtract(organism, mu_mean)
+        #x_m = np.subtract(organism, np.transpose(self.mu_mean))
         print('Mu = ' + str(organism) + ' mu mean = ' + str(self.mu_mean) + ' x_m = ' + str(x_m))
-        print('SHAPES : Mu : ' + str(np.shape(organism)) + ' mu mean :' + str(np.shape(self.mu_mean)) + ' x_m : ' + str(
+        #print('SHAPES : Mu : ' + str(np.shape(organism)) + ' mu mean :' + str(np.shape(self.mu_mean)) + ' x_m : ' + str(
+        #    np.shape(x_m)))
+        print('SHAPES : Mu : ' + str(np.shape(organism)) + ' mu mean :' + str(np.shape(mu_mean)) + ' x_m : ' + str(
             np.shape(x_m)))
         fitness_value = (1. / (np.sqrt((2 * np.pi) ** self.n_dim * np.linalg.det(self.sigma_covariance))) * np.exp(
             -(np.linalg.solve(self.sigma_covariance, x_m).T.dot(x_m)) / 2))
@@ -189,7 +205,7 @@ class Organism:
     def run(self):
         genotype = self.initial_genotype()
         print('Initial genotype ' + str(genotype))
-        father_organism = self.create_organism(genotype)
+        father_organism = [self.create_organism(genotype)]
         print('Padre ' + str(father_organism))
 
         epsilon = [self.epsilon for x in range(self.n_dim)]
