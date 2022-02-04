@@ -14,7 +14,7 @@ import random
 
 class Organism:
     def __init__(self, optimum, n_organisms, mu_mean, sigma_covariance, n_dim, mutation_rate, gen_duplication_rate,
-                 gen_deletion_rate, n_generations, limit_min, limit_max, epsilon, mutation_type, verbose=True):
+                 gen_deletion_rate, n_generations, limit_min, limit_max, epsilon, mutation_type, fgm_mode, verbose=True):
         self.optimum = optimum  # ideal vector (set to 0)
         self.n_organisms = n_organisms
         self.mu_mean = mu_mean
@@ -28,6 +28,7 @@ class Organism:
         self.limit_max = limit_max
         self.epsilon = epsilon  # maximum range of distance to the optimum
         self.mutation_type = mutation_type # def. if only mutate phenotype, genothype, both or randomly mutate one gene
+        self.fgm_mode = fgm_mode #Determinates if we're using FGM or the model proposed
         self.verbose = verbose
 
     # ================================= creacion del organismo ====================================================
@@ -187,14 +188,15 @@ class Organism:
         #organism = organism.squeeze(organism)
 
         ### COMPROBAR MATRICES !!!!!!!!!!!!!!!!!! ####
-        mu_mean = [self.mu_mean]
-        x_m = np.subtract(organism, mu_mean)
+        #mu_mean = [self.mu_mean]
+        #x_m = np.subtract(organism, mu_mean)
         #x_m = np.subtract(organism, np.transpose(self.mu_mean))
+        x_m = np.subtract(organism, self.mu_mean)
         print('Mu = ' + str(organism) + ' mu mean = ' + str(self.mu_mean) + ' x_m = ' + str(x_m))
-        #print('SHAPES : Mu : ' + str(np.shape(organism)) + ' mu mean :' + str(np.shape(self.mu_mean)) + ' x_m : ' + str(
-        #    np.shape(x_m)))
-        print('SHAPES : Mu : ' + str(np.shape(organism)) + ' mu mean :' + str(np.shape(mu_mean)) + ' x_m : ' + str(
+        print('SHAPES : Mu : ' + str(np.shape(organism)) + ' mu mean :' + str(np.shape(self.mu_mean)) + ' x_m : ' + str(
             np.shape(x_m)))
+        #print('SHAPES : Mu : ' + str(np.shape(organism)) + ' mu mean :' + str(np.shape(mu_mean)) + ' x_m : ' + str(
+        #    np.shape(x_m)))
         fitness_value = (1. / (np.sqrt((2 * np.pi) ** self.n_dim * np.linalg.det(self.sigma_covariance))) * np.exp(
             -(np.linalg.solve(self.sigma_covariance, x_m).T.dot(x_m)) / 2))
         # print('Fitness = ' + str(fitness_value))
@@ -257,10 +259,10 @@ class Organism:
 
 
 # =========== Main definition of the
+
 def main():
-    optimum = [0.0, 0.0, 0.0]  # first vector most match the n_dim
     model = Organism(
-        optimum=optimum,
+        optimum=[0.0, 0.0, 0.0],  # first vector most match the n_dim
         n_organisms=1,
         mu_mean=[0.0, 0.0, 0.0],
         sigma_covariance=[[2000.0, -1000.0, 0.0], [-1000, 2000.0, -1000.0], [0.0, -1000.0, 2000.0]],
@@ -274,6 +276,7 @@ def main():
         limit_max=500.00,  # limite superior para los valores del gen
         epsilon=10.0,
         mutation_type=0, # 0 -> phenotype, 1 -> genotype, 2 -> one random gene, 3 -> both
+        fgm_mode = False, #True = normal model, False = proposed model
         verbose=False)
     # model.create_organism()
     # model.selection(model.create_organism())
