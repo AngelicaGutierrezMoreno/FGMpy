@@ -35,14 +35,14 @@ class Organism:
     # ================================= creacion del organismo ====================================================
     def initial_genotype(self):
         genotype = [np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')]
-        print(len(genotype))
+        #print(len(genotype))
         return genotype
 
 
     def create_organism(self, genotype):
-        #print(len(genotype))
+        #print('length '+ str(len(genotype)))
         if(len(genotype) > 1):
-            organism = np.add.reduce(genotype)
+            organism = np.add.reduce([genotype])
         elif(len(genotype) == 1):
             organism = genotype
         elif(len(genotype) == 0):
@@ -59,50 +59,53 @@ class Organism:
             #print('Organismo a mutar: ' + str(organism))
             print('Genotype a mutar ' + str(genotype))
             vector_substract_value = [np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')]
-            #print('vector a substraer = ' + str(vector_substract_value))
+            print('vector a substraer = ' + str(vector_substract_value))
             #Sólo se va a mutar un gen del genotipo
             if(len(genotype) == 0):
                 print('No organism to mutate')
+            # elif(len(genotype) == 1):
+            #     genotype = genotype - vector_substract_value
             else:
                 gen_position = random.randint(0, len(genotype)-1)
-                #print('Selected position of gen to mutate: ' + str(gen_position))
+                print('Selected position of gen to mutate: ' + str(gen_position))
                 gen_to_mutate = genotype[gen_position]
-                #print('Selected gen : ' + str(gen_to_mutate))
-                #mutated_gen = np.subtract(gen_to_mutate, vector_substract_value)
+                print('Selected gen : ' + str(gen_to_mutate))
+                mutated_gen = np.subtract(gen_to_mutate, vector_substract_value)
+                #mutated_gen = gen_to_mutate - vector_substract_value
                 #print('Mutated gen : ' + str(mutated_gen))
-                #print('Matrix value :' + ' GEN = ' + str(np.shape(gen_to_mutate)) + ' VECTOR = ' + str(
-                #    np.shape(vector_substract_value)) + ' Mutated GEN = ' + str(np.shape(mutated_gen)))
+                print('Matrix value :' + ' GEN = ' + str(np.shape(gen_to_mutate)) + ' VECTOR = ' + str(
+                    np.shape(vector_substract_value)) + ' Mutated GEN = ' + str(np.shape(mutated_gen)))
                 #print('TYPES : ' + 'GEN to mutate type = ' + str(type(gen_to_mutate)) + ' Vector = ' + str(
                 #    type(vector_substract_value)) + ' mix ' + str(type(genotype[gen_position])))
                 genotype = list(genotype)
                 genotype[gen_position] = np.subtract(gen_to_mutate, vector_substract_value)
-                genotype = tuple(genotype)
                 print('Mutated genotype : ' + str(genotype))
-
-            organism = self.create_organism(genotype)
-            print('Organismo mutado: ' + str(organism))
+                organism = self.create_organism(genotype)
+                print('Organismo mutado: ' + str(organism))
         else:
-            organism = self.create_organism(genotype)
             print('No se realiza mutación')
         return genotype
 
     def gene_duplication(self, genotype):
         print("Iniciando gen duplication")
+        #print('Length ' + str(len(genotype)))
         #print('Genotipo antes de duplicar : ' + str(genotype))
         if random.random() <= self.gen_duplication_rate:
             if len(genotype) == 0:
                 print('No gen to duplicate')
             elif len(genotype) == 1:
+            #else:
                 genotype = genotype, genotype
                 print('Duplicated genotype ' + str(genotype))
-                organism = self.create_organism(genotype)
+                #organism = self.create_organism(genotype)
+                organism = np.add.reduce(genotype)
                 print('Organism ' + str(organism))
             else:
                 #print(len(genotype))
                 point = np.random.randint(len(genotype))
-                #print("Point " + str(point))
-                genotype = genotype, genotype[point]
-                #print('Posicion a duplicar : ' + str(point))
+                print("Point " + str(point))
+                genotype = genotype, genotype.append(genotype[point])
+                print('Posicion a duplicar : ' + str(point))
                 print('Genotype after duplication : ' + str(genotype))
                 #organism = self.create_organism(genotype)
                 #print('New organism ' + str(organism))
@@ -122,11 +125,12 @@ class Organism:
             else:
                 point = np.random.randint(len(genotype))
                 #print('Point ' + str(point))
-                selected_gene = genotype[point]
+                #selected_gene = genotype[point]
                 #print('Selected gene: ' + str(selected_gene))
                 genotype = np.delete(genotype, point, 0)
                 print('Genotype after deletion ' + str(genotype))
-                organism = self.create_organism(genotype)
+                #organism = self.create_organism(genotype)
+                organism = np.add.reduce(genotype)
                 #print('Posicion a eliminar : ' + str(point))
                 print('Organism ' + str(organism))
         else:
@@ -134,14 +138,6 @@ class Organism:
         return genotype
 
     # =================================== Fitness function evaluation ===============================================
-
-    # def fitness(self, organism):
-    #     """
-    #     Funcion que determina cuántos valores son iguales a los del óptimo
-    #     """
-    #     fitness_value = self.fitness_function(organism)
-    #     #print('Fitness value = ' + str(fitness_value))
-    #     return fitness_value
 
     def reproduction(self, genotype):
 
@@ -164,9 +160,9 @@ class Organism:
         """
         si la evaluación del fitness hijo es mayor a la del fitness padre, hacer seleccion
         """
-        score_son = self.fitness(self.create_organism(son_genotype))
+        score_son = self.fitness(np.add.reduce(son_genotype))
         print('Son fitness : ' + str(score_son))
-        score_father = self.fitness(self.create_organism(father_genotype))
+        score_father = self.fitness(np.add.reduce(son_genotype))
         print('Father fitness : ' + str(score_father))
 
         if score_son < score_father:
@@ -199,13 +195,14 @@ class Organism:
         #genotype = initial_genotype[:]
 
         while(father_organism == self.optimum or self.epsilon <= fitness_value):
-            print('_______________________')
+            print('#####################################################################################################')
             print('Generacion: ', i)
             son_genotype = self.reproduction(father_genotype)
             selected_genotype = self.selection(son_genotype, father_genotype)
             # selected_organism = self.create_organism(selected_genotype)
             # print('Best suited organism is : ' + str(selected_organism))
             print('Best suited genotype is : ' + str(selected_genotype))
+            fitness_value = self.fitness(selected_genotype)
             father_genotype = selected_genotype
             i += 1
 
@@ -242,21 +239,21 @@ class Organism:
 
 def main():
     model = Organism(
-        optimum=[10.0, 10.0, 10.0],  # first vector most match the n_dim
+        optimum=[10.0, 2.0, 100.0],  # first vector most match the n_dim
         n_organisms=1,
         mu_mean=[0.0, 0.0, 0.0],
         sigma_covariance=[[2000.0, -1000.0, 0.0], [-1000, 2000.0, -1000.0], [0.0, -1000.0, 2000.0]],
         # the matrix covariance must be a positive semidefinite symmetric one
         n_dim=3,
-        mutation_rate=0.4,  # keep rates minimum
-        gen_duplication_rate=0.5,
-        gen_deletion_rate=0.2,
+        mutation_rate=0.9,  # keep rates minimum
+        gen_duplication_rate=0.9,
+        gen_deletion_rate=0,
         n_generations=10,
         limit_min=0.00,  # limite inferior para los valores del gen
         limit_max=500.00,  # limite superior para los valores del gen
-        epsilon=10.0,
+        epsilon=5,
         mutation_type=0, # 0 -> phenotype, 1 -> genotype, 2 -> one random gene, 3 -> both
-        fgm_mode = True, #True = FG model, False = proposed model
+        fgm_mode = False, #True = FG model, False = proposed model
         verbose=False)
     model.run()
 
