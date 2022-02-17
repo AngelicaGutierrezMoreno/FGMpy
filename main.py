@@ -169,7 +169,7 @@ class Organism:
             print('------')
         return genotype
 
-    def selection(self, son_genotype, father_genotype):
+    def selection_genotype(self, son_genotype, father_genotype):
         """
         si la evaluación del fitness hijo es mayor a la del fitness padre, hacer seleccion
         """
@@ -185,6 +185,23 @@ class Organism:
         else:
             # print("Father's genotype" + str(father_genotype))
             return father_genotype, score_father
+
+    def selection_phenotype(self, son_phenotype, father_phenotype):
+        """
+        si la evaluación del fitness hijo es mayor a la del fitness padre, hacer seleccion
+        """
+        # score_son = self.fitness(np.add.reduce(son_genotype))
+        score_son = self.fitness(son_phenotype)
+        print('Son fitness : ' + str(score_son))
+        score_father = self.fitness(father_phenotype)
+        print('Father fitness : ' + str(score_father))
+
+        if score_son < score_father:
+            # print("Son's phenotype " + str(son_phenotype))
+            return son_phenotype, score_son
+        else:
+            # print("Father's phenotype" + str(father_phenotype))
+            return father_phenotype, score_father
 
     def fitness(self, genotype):
         """pdf of the multivari-ate normal distribution."""
@@ -243,26 +260,27 @@ class Organism:
                     son_genotype = self.reproduction(father_genotype)
                     print('Son genotype ' + str(son_genotype))
                     # son_phenotype = np.add.reduce(son_genotype) + self.initial_point
-                    # son_phenotype = np.add.reduce(son_genotype)
+                    #son_phenotype = np.add.reduce(son_genotype)
                     # print('Son phenotype : ' + str(son_phenotype))
                     # father_phenotype = np.add.reduce(father_genotype) + self.initial_point
-                    # father_phenotype = np.add.reduce(father_genotype)
+                    #father_phenotype = np.add.reduce(father_genotype)
                     # print('Father phenotype : ' + str(father_phenotype))
-                    # selected_phenotype = self.selection(son_phenotype, father_phenotype)
-                    selected_genotype, fitness_value = self.selection(son_genotype, father_genotype)
-                    # selected_organism = self.create_organism(selected_genotype)
+                    #selected_phenotype, fitness_value = self.selection_phenotype(son_phenotype, father_phenotype)
+                    selected_genotype, fitness_value = self.selection_genotype(son_genotype, father_genotype)
+                    #selected_organism = self.create_organism(selected_genotype)
                     selected_phenotype = self.create_organism(selected_genotype)
                     # print('Best suited organism is : ' + str(selected_organism))
                     print('Best suited genotype is : ' + str(selected_genotype))
-                    # print('Best suited genotype is : ' + str(selected_phenotype))
-                    # father_genotype = selected_genotype
+                    # print('Best suited phenotype is : ' + str(selected_phenotype))
+                    father_genotype = selected_genotype
+                    #father_genotype = selected_phenotype
                     initial_point = selected_phenotype
                     # father_genotype =
                     print('Point in the graph : ' + str(initial_point))
                 generations.append(i+1)
-                print('Generations: ' + str(generations))
+                #print('Generations: ' + str(generations))
                 fitnessValues.append(fitness_value)
-                print('Fitness values : ' + str(fitnessValues))
+                #print('Fitness values : ' + str(fitnessValues))
                 # fitnessValues += fitness_value
                 # Compute the x and y coordinates
                 plt.title("Progreción")
