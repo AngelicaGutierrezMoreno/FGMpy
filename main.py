@@ -74,7 +74,7 @@ class Organism:
             print('vector a substraer = ' + str(vector_substract_value))
             # Sólo se va a mutar un gen del genotipo
             if len(genotype) == 0:
-                print('No organism to mutate')
+                sys.exit("organism doesn't exist anymore")
             elif len(genotype) == self.n_dim:
                 mutated_gen = np.subtract(genotype, vector_substract_value)
                 print('Mutated gen : ' + str(mutated_gen))
@@ -119,7 +119,7 @@ class Organism:
                 print("Point " + str(point))
                 duplicated_gen = genotype[point]
                 print('Gen to duplicate : ' + str(duplicated_gen))
-                genotype = genotype.append(duplicated_gen)
+                genotype.append(duplicated_gen)
                 # genotype = genotype.extend(duplicated_gen)
                 print('Posicion a duplicar : ' + str(point))
                 print('Genotype after duplication : ' + str(genotype))
@@ -253,7 +253,7 @@ class Organism:
 
 
                 elif not self.verbose:
-                    # print('Padre genotype ' + str(father_genotype))
+                    print('Padre genotype ' + str(father_genotype))
                     print('_______________________')
                     print('Generacion: ', i)
                     print('Point : ' + str(initial_point))
@@ -282,11 +282,11 @@ class Organism:
                 fitnessValues.append(fitness_value)
                 #print('Fitness values : ' + str(fitnessValues))
                 # fitnessValues += fitness_value
-                # Compute the x and y coordinates
-                plt.title("Progreción")
-                # Plot the points using matplotlib
-                plt.plot(generations, fitnessValues)
-                plt.show()
+            # Compute the x and y coordinates
+            plt.title("Progreción")
+            # Plot the points using matplotlib
+            plt.plot(generations, fitnessValues)
+            plt.show()
 
         elif not self.gen_mode:
 
