@@ -40,6 +40,11 @@ class Organism:
 
     # ================================= creacion del organismo ====================================================
 
+    def get_optimum(self):
+        optimum = [0.0]*self.n_dim
+        print('Optimum vector : ' + str(optimum))
+        return optimum
+
     def initial_genotype(self):
         genotype = np.random.multivariate_normal(self.mu_mean, self.sigma_covariance, check_valid='raise')
         # print(len(genotype))
@@ -174,44 +179,50 @@ class Organism:
         si la evaluación del fitness hijo es mayor a la del fitness padre, hacer seleccion
         """
         # score_son = self.fitness(np.add.reduce(son_genotype))
-        score_son = self.fitness(self.create_organism(son_genotype))
-        print('Son fitness : ' + str(score_son))
-        score_father = self.fitness(np.add.reduce(father_genotype))
-        print('Father fitness : ' + str(score_father))
+        fitness_son = self.fitness(son_genotype)
+        print('Son fitness : ' + str(fitness_son))
+        fitness_father = self.fitness(father_genotype)
+        print('Father fitness : ' + str(fitness_father))
 
-        if score_son < score_father:
-            # print("Son's genotype " + str(son_genotype))
-            return son_genotype, score_son
-        else:
-            # print("Father's genotype" + str(father_genotype))
-            return father_genotype, score_father
-
-    def selection_phenotype(self, son_phenotype, father_phenotype):
-        """
-        si la evaluación del fitness hijo es mayor a la del fitness padre, hacer seleccion
-        """
-        # score_son = self.fitness(np.add.reduce(son_genotype))
-        score_son = self.fitness(son_phenotype)
-        print('Son fitness : ' + str(score_son))
-        score_father = self.fitness(father_phenotype)
-        print('Father fitness : ' + str(score_father))
-
-        if score_son < score_father:
+        if fitness_son < fitness_father:
             # print("Son's phenotype " + str(son_phenotype))
-            return son_phenotype, score_son
+            return son_genotype, fitness_son
         else:
             # print("Father's phenotype" + str(father_phenotype))
-            return father_phenotype, score_father
+            return father_genotype, fitness_father
+
+    # def selection_phenotype(self, son_phenotype, father_phenotype):
+    #     """
+    #     si la evaluación del fitness hijo es mayor a la del fitness padre, hacer seleccion
+    #     """
+    #     # score_son = self.fitness(np.add.reduce(son_genotype))
+    #     fitness_son = self.fitness(son_phenotype)
+    #     print('Son fitness : ' + str(fitness_son))
+    #     fitness_father = self.fitness(father_phenotype)
+    #     print('Father fitness : ' + str(fitness_father))
+    #
+    #     if fitness_son < fitness_father:
+    #         # print("Son's phenotype " + str(son_phenotype))
+    #         return son_phenotype, fitness_son
+    #     else:
+    #         # print("Father's phenotype" + str(father_phenotype))
+    #         return father_phenotype, fitness_father
 
     def fitness(self, genotype):
         """pdf of the multivari-ate normal distribution."""
-        # organism = self.create_organism(genotype)
-        organism = np.add.reduce(genotype)
+        organism = self.create_organism(genotype)
+        #organism = np.add.reduce(genotype)
         # print('Organism to evaluate : ' + str(organism))
-        fitness_value = distance.euclidean(organism, self.optimum)
+        fitness_value = distance.euclidean(self.get_optimum(), organism)
         # print('Fitness = ' + str(fitness_value))
         return fitness_value
         # https://peterroelants.github.io/posts/multivariate-normal-primer/
+
+    def distance_to_optimum(self, genotype):
+        organism = self.create_organism(genotype)
+        distanceOptimum = distance.euclidean(self.get_optimum(), organism)
+        # print('Fitness = ' + str(fitness_value))
+        return distanceOptimum
 
     # ======================================== Flux ================================================================
     def run(self):
@@ -283,14 +294,16 @@ class Organism:
                 #print('Fitness values : ' + str(fitnessValues))
                 # fitnessValues += fitness_value
             # Compute the x and y coordinates
-            plt.title("Progreción")
+            plt.title("Evolution (by number of generations)")
             # Plot the points using matplotlib
             plt.plot(generations, fitnessValues)
+            plt.xlabel('Generation')
+            plt.ylabel('Fitness')
             plt.show()
 
         elif not self.gen_mode:
 
-            while self.epsilon <= fitness_value:  # father_phenotype == self.optimum or
+            while self.epsilon <= fitness_value:  # father_phenotype == self.get_optimum() or
                 print(
                     '#####################################################################################################')
                 print('Generacion: ', i)
@@ -304,7 +317,7 @@ class Organism:
                 # father_phenotype = np.add.reduce(father_genotype)
                 # print('Father phenotype : ' + str(father_phenotype))
                 # selected_phenotype = self.selection(son_phenotype, father_phenotype)
-                selected_genotype, fitness_value = self.selection(son_genotype, father_genotype)
+                selected_genotype, fitness_value = self.selection_genotype(son_genotype, father_genotype)
                 # selected_organism = self.create_organism(selected_genotype)
                 selected_phenotype = self.create_organism(selected_genotype)
                 # print('Best suited organism is : ' + str(selected_organism))
@@ -315,15 +328,17 @@ class Organism:
                 # father_genotype =
                 print('Point in the graph : ' + str(initial_point))
                 i += 1
-            generations.append(i + 1)
-            print('Generations: ' + str(generations))
-            fitnessValues.append(fitness_value)
-            print('Fitness values : ' + str(fitnessValues))
+                generations.append(i + 1)
+                #print('Generations: ' + str(generations))
+                fitnessValues.append(fitness_value)
+                #print('Fitness values : ' + str(fitnessValues))
             # fitnessValues += fitness_value
             # Compute the x and y coordinates
-            plt.title("Progreción")
+            plt.title("Evolution (by epsilon)")
             # Plot the points using matplotlib
             plt.plot(generations, fitnessValues)
+            plt.xlabel('Generation')
+            plt.ylabel('Fitness')
             plt.show()
 
 
@@ -343,11 +358,11 @@ def main():
         n_generations=50,
         limit_min=0.00,  # limite inferior para los valores del gen
         limit_max=500.00,  # limite superior para los valores del gen
-        epsilon=50,
+        epsilon=10,
         mutation_type=0,  # 0 -> phenotype, 1 -> genotype, 2 -> one random gene, 3 -> both
         initial_point=[10.0, 10.0, 10.0],  # Iniital point in FGM
         fgm_mode=False,  # True = FG model, False = proposed model
-        gen_mode=True,  # True = number of generations , False = until optimum is reached
+        gen_mode=False,  # True = number of generations , False = until optimum is reached
         verbose=False)
     model.run()
 
