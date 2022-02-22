@@ -247,7 +247,7 @@ class Organism:
         # print('Initial fitness = ' + str(fitness_value))
         i = 0
         generations = [i]
-        fitnessValues = [fitness_value]
+        fitness_Values = [fitness_value]
 
         # genotype = initial_genotype[:]
         if self.gen_mode:
@@ -290,13 +290,13 @@ class Organism:
                     print('Point in the graph : ' + str(initial_point))
                 generations.append(i+1)
                 #print('Generations: ' + str(generations))
-                fitnessValues.append(fitness_value)
-                #print('Fitness values : ' + str(fitnessValues))
-                # fitnessValues += fitness_value
+                fitness_Values.append(fitness_value)
+                #print('Fitness values : ' + str(fitness_Values))
+                # fitness_Values += fitness_value
             # Compute the x and y coordinates
             plt.title("Evolution (by number of generations)")
             # Plot the points using matplotlib
-            plt.plot(generations, fitnessValues)
+            plt.plot(generations, fitness_Values)
             plt.xlabel('Generation')
             plt.ylabel('Fitness')
             plt.show()
@@ -330,13 +330,13 @@ class Organism:
                 i += 1
                 generations.append(i + 1)
                 #print('Generations: ' + str(generations))
-                fitnessValues.append(fitness_value)
-                #print('Fitness values : ' + str(fitnessValues))
-            # fitnessValues += fitness_value
+                fitness_Values.append(fitness_value)
+                #print('Fitness values : ' + str(fitness_Values))
+            # fitness_Values += fitness_value
             # Compute the x and y coordinates
             plt.title("Evolution (by epsilon)")
             # Plot the points using matplotlib
-            plt.plot(generations, fitnessValues)
+            plt.plot(generations, fitness_Values)
             plt.xlabel('Generation')
             plt.ylabel('Fitness')
             plt.show()
