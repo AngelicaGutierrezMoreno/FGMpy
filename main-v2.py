@@ -230,11 +230,20 @@ class Organism:
 
     def graph_fitnessVSgenerations(self, fitness_Values, generations):
         # Compute the x and y coordinates
-        plt.title("FITNESS vs GENERATIONS")
+        plt.title("Fitness vs GENERATIONS")
         # Plot the points using matplotlib
         plt.plot(generations, fitness_Values)
         plt.xlabel('Generation')
         plt.ylabel('Fitness')
+        plt.show()
+
+    def graph_distanceVSgenerations(selfself, distance_Values, generations):
+        # Compute the x and y coordinates
+        plt.title("Distance vs GENERATIONS")
+        # Plot the points using matplotlib
+        plt.plot(generations, distance_Values)
+        plt.xlabel('Generation')
+        plt.ylabel('Distance')
         plt.show()
 
     # ----Declaration of the algo
@@ -249,12 +258,14 @@ class Organism:
         # phenotype = np.add.reduce(np.array(initial_point), ph)
         # print(phenotype)
         fitness_value = self.fitness_function(father_phenotype)
+        distance_value = self.distance_optimum(father_phenotype)
         print('Father fitness : ' + str(fitness_value))
         distance_optimum = self.distance_optimum(father_phenotype)
         print('Distance to the optimum = ' + str(distance_optimum))
         i = 0
         generations = [i]
         fitness_Values = [fitness_value]
+        distance_Values = [distance_value]
 
         if self.gen_mode:
             for i in range(self.n_generations):
@@ -289,7 +300,7 @@ class Organism:
                 #check_dim(son_genotype)
                 #son_phenotype = self.sum_genes(son_genotype)
                 print('Son genotype ' + str(son_genotype))
-                selected_genotype, fitness_value, selected_distance = self.selection(son_genotype, father_genotype)
+                selected_genotype, fitness_value, distance_value = self.selection(son_genotype, father_genotype)
                 #selected_genotype = check_dim(selected_genotype)
                 # selected_organism = self.create_organism(selected_genotype)
                 selected_phenotype = self.sum_genes(selected_genotype)
@@ -297,6 +308,7 @@ class Organism:
                 print('Best suited genotype is : ' + str(selected_genotype))
                 # print('Best suited phenotype is : ' + str(selected_phenotype))
                 father_genotype = selected_genotype
+                distance_optimum = distance_value
                 #initial_point = selected_phenotype
                 #father_phenotype = selected_phenotype
                 #print('Point in the graph : ' + str(initial_point))
@@ -304,6 +316,9 @@ class Organism:
                 generations.append(i + 1)
                 # print('Generations: ' + str(generations))
                 fitness_Values.append(fitness_value)
+                distance_Values.append(distance_value)
+                self.graph_fitnessVSgenerations(fitness_Values, generations)
+                self.graph_distanceVSgenerations(distance_Values, generations)
 
 
 # =========== Main definition of the
@@ -318,7 +333,7 @@ def main():
         gen_duplication_rate=0.9,
         gen_deletion_rate=0.0000,
         n_generations=50,
-        epsilon=10,
+        epsilon=1,
         mutation_type=0,  # 0 -> phenotype, 1 -> genotype, 2 -> one random gene, 3 -> both
     )
 
