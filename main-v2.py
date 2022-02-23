@@ -21,7 +21,7 @@ from matplotlib import pyplot as plt
 
 def exist(genotype):
     # print('Genotypes length : ' + len(genotype))
-    #genotype = check_dim(genotype)
+    # genotype = check_dim(genotype)
     if len(genotype) == 0:
         sys.exit("Genotype does't exist anymore")
     else:
@@ -31,10 +31,10 @@ def exist(genotype):
 def check_dim(genotype):
     print('Check dim')
     if type(genotype) == np.float64:
-        #print('Type = ' + str(type(genotype)))
+        # print('Type = ' + str(type(genotype)))
         genotype = [genotype]
-        #if
-        #print('New type = ' + str(type(organism)))
+        # if
+        # print('New type = ' + str(type(organism)))
         print(genotype)
         return genotype
     else:
@@ -71,20 +71,21 @@ class Organism:
         return genotype
 
     def sum_genes(self, genotype):
-        #print('Initializing sum_genes')
+        # print('Initializing sum_genes')
         # print('length '+ str(len(genotype)))
-        #genotype = check_dim(genotype)
+        # genotype = check_dim(genotype)
         if len(genotype) > 0:
             organism = np.add.reduce(genotype)
-            #print(type(organism))
-            #print('suma de genes : ' + str(organism))
+            # print(type(organism))
+            # print('suma de genes : ' + str(organism))
         elif len(genotype) == 0:
             sys.exit("organism doesn't exist anymore")
         else:
             print('Genotype 0 = ' + str(genotype))
             organism = genotype
-        #print('Ending sum_genes')
+        # print('Ending sum_genes')
         return organism
+
     # ----Declaration of events
 
     def get_mutation_vector(self, deviation):
@@ -92,10 +93,15 @@ class Organism:
         print('Mutation vector: ' + str(mutation_vector))
         return mutation_vector
 
-    def mutation(self, genotype, deviation):
+    def mutation(self, genotype, deviation, ):
+        #
+        #
+        # Change it to mutate only one gene
+        #
+        #
         if exist(genotype):
             print("Iniciando mutacion")
-            #check_dim(genotype)
+            # check_dim(genotype)
             genotype = np.subtract(genotype, self.get_mutation_vector(deviation))
             # genotype = np.subtract(genotype, NormalDist(0.0, deviation).samples(self.n_dim))
             print('Mutated genotype: ' + str(genotype))
@@ -129,7 +135,7 @@ class Organism:
         # NormalDist(0.0, 0.15)
         fitness_value = np.mean(multivariate_normal.pdf(phenotype))
         # statistics.mean(fitness_value)
-        #print('Fitness = ' + str(fitness_value))
+        # print('Fitness = ' + str(fitness_value))
         return fitness_value
 
     def event_provability(self, rate):
@@ -140,7 +146,7 @@ class Organism:
 
     def duplication_loop(self, genotype, num_repeticiones):
         i = 1
-        #check_dim(genotype)
+        # check_dim(genotype)
         if num_repeticiones > 0:
             print("Iniciando gen duplication")
             while i <= num_repeticiones:
@@ -159,7 +165,7 @@ class Organism:
 
     def deletion_loop(self, genotype, num_repeticiones):
         i = 1
-        #check_dim(genotype)
+        # check_dim(genotype)
         if num_repeticiones > 0:
             print("Iniciando gen deletion")
             while i <= num_repeticiones:
@@ -175,11 +181,11 @@ class Organism:
 
     def distance_optimum(self, phenotype):
         distance_optimum = distance.euclidean(self.get_optimum(), phenotype)
-        #print('Distance = ' + str(distance_optimum))
+        # print('Distance = ' + str(distance_optimum))
         return distance_optimum
 
     def reproduction(self, genotype):
-        #check_dim(genotype)
+        # check_dim(genotype)
         if self.fgm_mode:
             while exist(genotype):
                 genotype = self.mutation(genotype, self.mutation_rate)
@@ -206,16 +212,16 @@ class Organism:
         """
         # score_son = self.fitness(np.add.reduce(son_genotype))
         fitness_son = self.fitness_function(self.create_phenotype(self.initial_point, son_genotype))
-        #fitness_son = self.fitness_function(son_genotype)
+        # fitness_son = self.fitness_function(son_genotype)
         print('Son fitness : ' + str(fitness_son))
         fitness_father = self.fitness_function(self.create_phenotype(self.initial_point, father_genotype))
-        #fitness_father = self.fitness_function(father_genotype)
+        # fitness_father = self.fitness_function(father_genotype)
         print('Father fitness : ' + str(fitness_father))
 
         son_distance = self.distance_optimum(self.create_phenotype(self.initial_point, son_genotype))
         father_distance = self.distance_optimum(self.create_phenotype(self.initial_point, father_genotype))
 
-        #if fitness_son < fitness_father:
+        # if fitness_son < fitness_father:
         if son_distance < father_distance:
             # print("Son's phenotype " + str(son_genotype))
             return son_genotype, fitness_son, son_distance
@@ -230,21 +236,42 @@ class Organism:
 
     def graph_fitnessVSgenerations(self, fitness_Values, generations):
         # Compute the x and y coordinates
-        plt.title("Fitness vs GENERATIONS")
+        plt.title("FITNESS vs GENERATIONS")
         # Plot the points using matplotlib
         plt.plot(generations, fitness_Values)
         plt.xlabel('Generation')
         plt.ylabel('Fitness')
         plt.show()
 
-    def graph_distanceVSgenerations(selfself, distance_Values, generations):
+    def graph_distanceVSgenerations(self, distance_Values, generations):
         # Compute the x and y coordinates
-        plt.title("Distance vs GENERATIONS")
+        plt.title("DISTANCE vs GENERATIONS")
         # Plot the points using matplotlib
         plt.plot(generations, distance_Values)
         plt.xlabel('Generation')
         plt.ylabel('Distance')
         plt.show()
+
+    def graph_numGensVSgenerations(self, gen_Size, generations):
+        # Compute the x and y coordinates
+        plt.title("GEN SIZE vs GENERATIONS")
+        # Plot the points using matplotlib
+        plt.plot(generations, gen_Size)
+        plt.xlabel('Generation')
+        plt.ylabel('Gen Size')
+        plt.show()
+
+    def graph_distanceVSoptimum(self, distance_Values, optimum):
+        # Compute the x and y coordinates
+        plt.title("DISTANCE vs OPTIMUM")
+        # Plot the points using matplotlib
+        plt.plot(optimum, distance_Values)
+        plt.xlabel('Optimum')
+        plt.ylabel('Distance')
+        plt.show()
+
+    # def get_genSize(self, genotype):
+    #     for i in genotype:
 
     # ----Declaration of the algo
     def run(self):
@@ -262,10 +289,12 @@ class Organism:
         print('Father fitness : ' + str(fitness_value))
         distance_optimum = self.distance_optimum(father_phenotype)
         print('Distance to the optimum = ' + str(distance_optimum))
+        father_size = len(father_genotype)
         i = 0
         generations = [i]
         fitness_Values = [fitness_value]
         distance_Values = [distance_value]
+        gen_Size = [father_size]
 
         if self.gen_mode:
             for i in range(self.n_generations):
@@ -275,7 +304,7 @@ class Organism:
                 selected_genotype, fitness_value = self.selection(son_genotype, father_genotype)
                 # selected_organism = self.create_organism(selected_genotype)
                 selected_phenotype = self.sum_genes(selected_genotype)
-                #selected_genotype = check_dim(selected_genotype)
+                # selected_genotype = check_dim(selected_genotype)
                 # print('Best suited organism is : ' + str(selected_organism))
                 print('Best suited genotype is : ' + str(selected_genotype))
                 print('Best suited phenotype is : ' + str(selected_phenotype))
@@ -295,13 +324,13 @@ class Organism:
                 print(
                     '#####################################################################################################')
                 print('Generacion: ', i)
-                #check_dim(father_genotype)
+                # check_dim(father_genotype)
                 son_genotype = self.reproduction(father_genotype)
-                #check_dim(son_genotype)
-                #son_phenotype = self.sum_genes(son_genotype)
+                # check_dim(son_genotype)
+                # son_phenotype = self.sum_genes(son_genotype)
                 print('Son genotype ' + str(son_genotype))
                 selected_genotype, fitness_value, distance_value = self.selection(son_genotype, father_genotype)
-                #selected_genotype = check_dim(selected_genotype)
+                # selected_genotype = check_dim(selected_genotype)
                 # selected_organism = self.create_organism(selected_genotype)
                 selected_phenotype = self.sum_genes(selected_genotype)
                 # print('Best suited organism is : ' + str(selected_organism))
@@ -309,16 +338,22 @@ class Organism:
                 # print('Best suited phenotype is : ' + str(selected_phenotype))
                 father_genotype = selected_genotype
                 distance_optimum = distance_value
-                #initial_point = selected_phenotype
-                #father_phenotype = selected_phenotype
-                #print('Point in the graph : ' + str(initial_point))
+                print('Distancia del óptimo: ' + str(distance_optimum))
+                gen_len = len(selected_genotype)
+                # initial_point = selected_phenotype
+                # father_phenotype = selected_phenotype
+                # print('Point in the graph : ' + str(initial_point))
                 i += 1
                 generations.append(i + 1)
                 # print('Generations: ' + str(generations))
                 fitness_Values.append(fitness_value)
                 distance_Values.append(distance_value)
-                self.graph_fitnessVSgenerations(fitness_Values, generations)
-                self.graph_distanceVSgenerations(distance_Values, generations)
+                gen_Size.append(gen_len)
+                # print('Gen size vector : ' + str(gen_Size))
+            self.graph_fitnessVSgenerations(fitness_Values, generations)
+            self.graph_distanceVSgenerations(distance_Values, generations)
+            self.graph_numGensVSgenerations(gen_Size, generations)
+            # self.graph_distanceVSoptimum(distance_Values, self.get_optimum())
 
 
 # =========== Main definition of the
@@ -327,7 +362,7 @@ def main():
     model = Organism(
         fgm_mode=False,  # True = FG model, False = proposed model
         gen_mode=False,  # True = number of generations , False = until optimum is reached
-        initial_point=[10.0,10.0,10.0],  # Inital point in FGM
+        initial_point=[10.0, 10.0, 10.0],  # Inital point in FGM
         n_dim=3,
         mutation_rate=0.8,  # keep rates minimum
         gen_duplication_rate=0.9,
