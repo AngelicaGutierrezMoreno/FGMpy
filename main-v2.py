@@ -97,17 +97,11 @@ class Organism:
         if exist(genotype):
             print("Iniciando mutacion")
             # check_dim(genotype)
-            print(len(genotype))
-            #print(np.subtract(genotype[0], self.get_mutation_vector(deviation)))
-            #genotype = [(np.subtract(genotype[i], self.get_mutation_vector(deviation))) for i in genotype]
-            # for i in genotype:
-            #     genotype[i] = np.subtract(genotype[i], self.get_mutation_vector(deviation))
             i = 0
             while i <= len(genotype)-1:
                 genotype[i] = np.subtract(genotype[i], self.get_mutation_vector(deviation))
                 i += 1
-            #genotype = np.subtract(genotype, self.get_mutation_vector(deviation))
-            # genotype = np.subtract(genotype, NormalDist(0.0, deviation).samples(self.n_dim))
+            # genotype = np.subtract(genotype, self.get_mutation_vector(deviation))
             print('Mutated genotype: ' + str(genotype))
         else:
             print('Cannot do mutation')
@@ -144,9 +138,16 @@ class Organism:
 
     def event_provability(self, rate):
         number_events = np.random.binomial(2, rate, 2)  # probability vector that indicates how many
+        #number_events = np.random.binomial(len(genotype), 0.5)
         # duplications/deletions should happen in the genotype // binomial(n [>= 0], p [>= 0 and <=1], size=None)
         print(number_events)
         return number_events
+
+    def event_selection(self, number_events):
+        number_duplications = np.random.binomial(number_events, self.gen_duplication_rate)
+        number_deletions = np.random.binomial((number_events-number_duplications), self.gen_deletion_rate)
+        print('# dup = ' + str(number_duplications) + ' # delet = ' + str(number_deletions))
+        return number_duplications, number_deletions
 
     def duplication_loop(self, genotype, num_repeticiones):
         i = 1
@@ -196,6 +197,9 @@ class Organism:
                 break
         elif not self.fgm_mode:
             if exist(genotype):
+                #number_events = self.event_provability(genotype)
+                #[n_dup, n_del] = self.event_selection(number_events)
+                #rate = self.gen_duplication_rate
                 [n_dup, n_del] = self.event_provability(self.gen_duplication_rate)
                 # print(n_dup)
                 genotype = self.duplication_loop(genotype, n_dup)
@@ -235,7 +239,7 @@ class Organism:
 
     def create_phenotype(self, initial_point, genotype):
         # phenotype = np.add.reduce( genotype)
-        phenotype = np.subtract(initial_point, self.sum_genes(genotype))
+        phenotype = np.add(initial_point, self.sum_genes(genotype))
         return phenotype
 
     def graph_fitnessVSgenerations(self, fitness_Values, generations):
@@ -281,7 +285,7 @@ class Organism:
     def run(self):
         initial_point = self.initial_point
         print('Starting point: ' + str(initial_point))
-        father_genotype = [self.initial_genotype(), self.initial_genotype()]
+        father_genotype = [self.initial_genotype()]
         print('Father genotpe : ' + str(father_genotype))
         self.fitness_function(initial_point)
         self.distance_optimum(initial_point)
