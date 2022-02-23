@@ -93,16 +93,20 @@ class Organism:
         print('Mutation vector: ' + str(mutation_vector))
         return mutation_vector
 
-    def mutation(self, genotype, deviation, ):
-        #
-        #
-        # Change it to mutate only one gene
-        #
-        #
+    def mutation(self, genotype, deviation):
         if exist(genotype):
             print("Iniciando mutacion")
             # check_dim(genotype)
-            genotype = np.subtract(genotype, self.get_mutation_vector(deviation))
+            print(len(genotype))
+            #print(np.subtract(genotype[0], self.get_mutation_vector(deviation)))
+            #genotype = [(np.subtract(genotype[i], self.get_mutation_vector(deviation))) for i in genotype]
+            # for i in genotype:
+            #     genotype[i] = np.subtract(genotype[i], self.get_mutation_vector(deviation))
+            i = 0
+            while i <= len(genotype)-1:
+                genotype[i] = np.subtract(genotype[i], self.get_mutation_vector(deviation))
+                i += 1
+            #genotype = np.subtract(genotype, self.get_mutation_vector(deviation))
             # genotype = np.subtract(genotype, NormalDist(0.0, deviation).samples(self.n_dim))
             print('Mutated genotype: ' + str(genotype))
         else:
@@ -277,7 +281,7 @@ class Organism:
     def run(self):
         initial_point = self.initial_point
         print('Starting point: ' + str(initial_point))
-        father_genotype = [self.initial_genotype()]
+        father_genotype = [self.initial_genotype(), self.initial_genotype()]
         print('Father genotpe : ' + str(father_genotype))
         self.fitness_function(initial_point)
         self.distance_optimum(initial_point)
