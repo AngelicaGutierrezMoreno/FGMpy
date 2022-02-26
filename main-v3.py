@@ -487,7 +487,7 @@ def main():
         gen_duplication_rate=0.9,
         gen_deletion_rate=0.0,
         n_generations=100,
-        epsilon=1
+        epsilon=5
     )
 
     model.run()
