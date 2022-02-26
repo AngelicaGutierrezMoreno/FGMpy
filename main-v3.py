@@ -33,7 +33,7 @@ def exist(genotype):
 def sum_genes(genotype):
     # print('Initializing sum_genes')
     # print('Genotype sum ' + str(genotype))
-    if len(genotype) > 0:
+    if len(genotype) > 1:
         phenotype = np.add.reduce(genotype)
         # print(type(phenotype))
         # print('suma de genes : ' + str(phenotype))
@@ -186,12 +186,11 @@ def add_to_elements(fitness_values, fitness_value, distance_values,
     print('Gen size vector : ' + str(gen_size))
 
 
-def add_to_elements_mutation(generations, i, fitness_values, fitness_value, distance_values, distance_value,
-                             number_mutations, nm):
+def add_to_elements_mutation(fitness_values, fitness_value, distance_values, distance_value, generations, i): #,number_mutations, nm):
     generations.append(i)
     fitness_values.append(fitness_value)
     distance_values.append(distance_value)
-    number_mutations.append(nm)
+    #number_mutations.append(nm)
     print('Generations: ' + str(generations))
 
 
@@ -318,6 +317,27 @@ class Organism:
             # print("Father's phenotype" + str(father_phenotype))
             return father_genotype, fitness_father, father_distance, size_father
 
+    def selection_FGM(self, son_phenotype, father_phenotype):
+        """
+        si la evaluación del fitness hijo es menor a la del fitness padre, hacer seleccion
+        """
+        fitness_son, son_distance = self.evaluate_FGM(son_phenotype)
+        fitness_father, father_distance = self.evaluate_FGM(father_phenotype)
+        print('Son genotype: ' + str(son_phenotype))
+        # print('Son fitness : ' + str(fitness_son))
+        # print('Son distance to optimum ' + str(son_distance))
+        print('Father genotype: ' + str(father_phenotype))
+        # print('Father fitness : ' + str(fitness_father))
+        print('Father distance to optimum ' + str(father_distance))
+        print('Son distance to optimum ' + str(son_distance))
+        # if fitness_son < fitness_father:
+        if son_distance <= father_distance:
+            # print("Son's phenotype " + str(son_genotype))
+            return son_phenotype, fitness_son, son_distance
+        else:
+            # print("Father's phenotype" + str(father_phenotype))
+            return father_phenotype, fitness_father, father_distance
+
     def create_phenotype(self, initial_point, genotype):
         # phenotype = np.add.reduce( genotype)
         if self.fgm_mode:
@@ -346,6 +366,13 @@ class Organism:
         size_value = len(genotype)
         return fitness_value, distance_value, size_value
 
+    def evaluate_FGM(self, phenotype):
+        # print('Entering evaluate function')
+        # print('Genotype to evaluate : ' + str(genotype))
+        fitness_value = fitness_function(phenotype)
+        distance_value = self.distance_optimum(phenotype)
+        return fitness_value, distance_value
+
     def initial_evaluation(self, initial_point):
         fitness_value = fitness_function(initial_point)
         distance_value = self.distance_optimum(initial_point)
@@ -356,7 +383,8 @@ class Organism:
         son_phenotype = self.mutation(father_phenotype, self.mutation_rate)
         print('Son ' + str(son_phenotype))
         # print('Number_mut = ' + str(number_mutations))
-        [selected_phenotype, fitness_value, distance_value] = self.selection(son_phenotype, father_phenotype)
+        selected_phenotype, fitness_value, distance_value = self.selection_FGM(son_phenotype,
+                                                                                              father_phenotype)
         print('Selected phenotype : ' + str(selected_phenotype))
         print('Fitness of selected phenotype : ' + str(fitness_value))
         print('Distance to optimum : ' + str(distance_value))
@@ -404,27 +432,37 @@ class Organism:
 
         if self.fgm_mode:
             # Inicia FGM
-            while not father_phenotype.any():
+            print('FGM selected')
+            while father_phenotype.all():
+                print('Exist fath_gen')
                 if self.gen_mode:
                     # Initialize FGM for determined number of generations
                     for i in range(self.n_generations):
                         print('########################################')
                         print('Generacion: ', i)
-                        selected_phenotype, fitness_value, distance_value = self.model_FGM(father_phenotype)
+                        selected_phenotype, fitness_selected, distance_selected = self.model_FGM(father_phenotype)
                         father_phenotype = selected_phenotype
-                        # distance_value = distance_value
-                        add_to_elements_mutation(generations, i, fitness_values, fitness_value, distance_values,
-                                                 distance_value, number_mutations)  # , nm)
+                        print('Father: ' + str(father_genotype))
+                        fitness_value = fitness_selected
+                        distance_value = distance_selected
+                        i += 1
+                        add_to_elements_mutation(fitness_values, fitness_value, distance_values, distance_value,
+                                                 generations, i)  # , number_mutations, nm)
+                    break
                 else:
                     # Initialize FGM until optimum is reached
                     while self.epsilon <= distance_value:
                         print('########################################')
                         print('Generacion: ', i)
-                        selected_phenotype, fitness_value, distance_value = self.model_FGM(father_phenotype)
+                        selected_phenotype, fitness_selected, distance_selected = self.model_FGM(father_phenotype)
                         father_phenotype = selected_phenotype
-                        # distance_value = distance_value
-                        add_to_elements_mutation(generations, i, fitness_values, fitness_value, distance_values,
-                                                 distance_value, number_mutations)  # , nm)
+                        print('Father: ' + str(father_genotype))
+                        fitness_value = fitness_selected
+                        distance_value = distance_selected
+                        i += 1
+                        add_to_elements_mutation(fitness_values, fitness_value, distance_values, distance_value,
+                                                 generations, i)  # , number_mutations, nm)
+                    break
 
             print_FGMgraphs(generations, fitness_values, distance_values)  # , number_mutations)
         else:
@@ -471,13 +509,13 @@ def main():
     model = Organism(
         fgm_mode=False,  # True = FG model, False = proposed model
         gen_mode=False,  # True = number of generations , False = until optimum is reached
-        initial_point=[10.0, 10.0, 10.0],  # Inital point in FGM
+        initial_point=[10.0, 10.0, 10.0],  # Initial point
         n_dim=3,
         mutation_rate=0.8,  # keep rates minimum
         gen_duplication_rate=0.9,
         gen_deletion_rate=0.0,
         n_generations=10,
-        epsilon=5
+        epsilon=0.5
     )
 
     model.run()
