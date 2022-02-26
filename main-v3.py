@@ -433,7 +433,7 @@ class Organism:
                         father_genotype, fitness_values, distance_values, generations, gen_size, number_mutation = \
                             self.model(father_genotype, fitness_values, distance_values, generations, gen_size,
                                        number_mutations, i)  # , nm)
-
+                    break
 
                 else:
                     # Initialize model until optimum is reached
@@ -441,6 +441,7 @@ class Organism:
                         father_genotype, fitness_values, distance_values, generations, gen_size, number_mutations = \
                             self.model(father_genotype, fitness_values, distance_values, generations, gen_size,
                                        number_mutations, i)  # , nm)
+                    break
 
             print_graphs(generations, fitness_values, distance_values, gen_size)  # , number_mutations)
 
