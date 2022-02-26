@@ -29,19 +29,6 @@ def exist(genotype):
         # print('Length genotype is ' + str(len(genotype)) + 'in exist(genotype) function')
         return True
 
-
-def check_dim(genotype):
-    print('Check dim')
-    if type(genotype) == np.float64:
-        print('Type = ' + str(type(genotype)))
-        genotype = [genotype]
-        print('New type = ' + str(type(genotype)))
-        print(genotype)
-        return genotype
-    else:
-        return genotype
-
-
 def sum_genes(genotype):
     # print('Initializing sum_genes')
     # print('Genotype sum ' + str(genotype))
