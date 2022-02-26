@@ -351,15 +351,6 @@ class Organism:
         distance_value = self.distance_optimum(initial_point)
         return fitness_value, distance_value
 
-    # def add_update(self):
-    #     father_genotype = selected_genotype
-    #     fitness_value = fitness_selected
-    #     distance_value = distance_selected
-    #     gen_len = size_selected
-    #     i += 1
-    #     add_to_elements(fitness_values, fitness_value, distance_values, distance_value, generations, gen_size, gen_len,
-    #                     i)  # , number_mutations #, nm)
-
     def model_FGM(self, father_phenotype):  # , number_mutations ,nm
         # son_phenotype, nm = self.mutation(father_phenotype, self.mutation_rate, nm)
         son_phenotype = self.mutation(father_phenotype, self.mutation_rate)
@@ -479,12 +470,12 @@ class Organism:
 def main():
     model = Organism(
         fgm_mode=False,  # True = FG model, False = proposed model
-        gen_mode=True,  # True = number of generations , False = until optimum is reached
+        gen_mode=False,  # True = number of generations , False = until optimum is reached
         initial_point=[10.0, 10.0, 10.0],  # Inital point in FGM
         n_dim=3,
         mutation_rate=0.8,  # keep rates minimum
         gen_duplication_rate=0.9,
-        gen_deletion_rate=0.2,
+        gen_deletion_rate=0.0,
         n_generations=10,
         epsilon=5
     )
