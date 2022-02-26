@@ -229,7 +229,7 @@ class Organism:
         father_distance = self.distance_optimum(self.create_phenotype(self.initial_point, father_genotype))
         print('Father distance to optimum ' + str(father_distance))
         # if fitness_son < fitness_father:
-        if son_distance < father_distance:
+        if son_distance <= father_distance:
             # print("Son's phenotype " + str(son_genotype))
             return son_genotype, fitness_son, son_distance
         else:
