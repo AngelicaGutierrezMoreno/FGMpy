@@ -480,14 +480,14 @@ class Organism:
 def main():
     model = Organism(
         fgm_mode=False,  # True = FG model, False = proposed model
-        gen_mode=True,  # True = number of generations , False = until optimum is reached
+        gen_mode=False,  # True = number of generations , False = until optimum is reached
         initial_point=[10.0, 10.0, 10.0],  # Inital point in FGM
         n_dim=3,
         mutation_rate=0.8,  # keep rates minimum
         gen_duplication_rate=0.9,
         gen_deletion_rate=0.0,
         n_generations=100,
-        epsilon=5
+        epsilon=1
     )
 
     model.run()
