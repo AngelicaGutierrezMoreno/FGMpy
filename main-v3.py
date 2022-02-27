@@ -72,7 +72,8 @@ def deletion(genotype, i):
 
 def fitness_function(phenotype):
     """pdf of the multivari-ate normal distribution."""
-    fitness_value = np.mean(multivariate_normal.pdf(phenotype))
+    #fitness_value = np.mean(multivariate_normal.pdf(phenotype))
+    fitness_value = np.linalg.norm(phenotype)
     return fitness_value
 
 
