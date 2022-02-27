@@ -45,7 +45,7 @@ def graph_numGensVSgenerations(gen_size, generations, f):
 def main():
     filename = "results.csv"
     header = [ 'Inicial point', 'Dimensions', 'Mutation rate', 'Dup rate', 'Del. rate', 'Epsilon',
-               'Best genotype', 'Distance to optimum']
+               'Best phenotype', 'Best genotype', 'Distance to optimum', 'Total generations', 'PlotName']
     #['id', 'fgm_mode', 'gen_mode', 'inicial_point', 'n_dim', 'mutation_rate', 'gen_duplication_rate', 'gen_deletion_rate', 'n_generations', 'epsilon]
     experiments = [
         ['plot1', False, False, [10.0], 1, 0.5, 0.5, 0.5, 10, .5],
@@ -71,11 +71,11 @@ def main():
             epsilon=e[9]
         )
 
-        father_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size = model.run()
+        best_phenotype, best_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size = model.run()
         print("Results:")
-        print("Father genotype:", father_genotype)
+        print("Best phenotype:", best_phenotype)
+        print("Best genotype:", best_genotype)
         print("Fitness_value:", fitness_value)
-        print("Distance to optimum", distance_value)
         print("Generations", i)
 
         results.append([
@@ -85,10 +85,11 @@ def main():
             e[6],
             e[7],
             e[9],
-            father_genotype,
+            best_phenotype,
+            best_genotype,
             fitness_value,
-            distance_value,
-            i
+            i,
+            e[0]
         ])
 
         ## Save graphs

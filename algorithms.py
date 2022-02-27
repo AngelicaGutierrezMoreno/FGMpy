@@ -508,7 +508,10 @@ class Organism:
             # df1 = pd.DataFrame()
 
             #print_graphs(generations, fitness_values, distance_values, gen_size)  # , number_mutations)
-            return father_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size
+            best_genotype = father_genotype
+            best_phenotype = self.create_phenotype(self.initial_point, best_genotype)
+
+            return best_phenotype, best_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size
 
 def main(_fgm_mode,
          _gen_mode,
