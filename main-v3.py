@@ -3,6 +3,7 @@ Created on Tue Nov 30 16:58:58 2021
 
 @author: angie
 """
+import copy
 import functools
 import math
 import statistics
@@ -11,6 +12,7 @@ import sys
 from scipy.stats import multivariate_normal  # multivariate normal distribution
 from statistics import NormalDist  # Normal distribution
 
+import pandas as pd
 # importing operator for operator functions
 import operator
 
@@ -33,7 +35,7 @@ def exist(genotype):
 def sum_genes(genotype):
     # print('Initializing sum_genes')
     # print('Genotype sum ' + str(genotype))
-    if len(genotype) > 1:
+    if len(genotype) >= 1:
         phenotype = np.add.reduce(genotype)
         # print(type(phenotype))
         # print('suma de genes : ' + str(phenotype))
@@ -87,10 +89,10 @@ def duplication_loop(genotype, num_repeticiones):
                 genotype = duplication(genotype, pos)
                 # print('Genotype after duplication : ' + str(genotype))
             i = i + 1
-        print('Genotype after duplication : ' + str(genotype))
+        #print('Genotype after duplication : ' + str(genotype))
     else:
         print('No gens will be duplicated')
-        print('Genotype ' + str(genotype))
+        #print('Genotype ' + str(genotype))
     return genotype
 
 
@@ -105,10 +107,10 @@ def deletion_loop(genotype, num_repeticiones):
             genotype = deletion(genotype, pos)
             # print('Genotype after deletion : ' + str(genotype))
             i = i + 1
-        print('Genotype after deletion : ' + str(genotype))
+        #print('Genotype after deletion : ' + str(genotype))
     else:
         print('No gens will be deleted')
-        print('Genotype ' + str(genotype))
+        #print('Genotype ' + str(genotype))
     return genotype
 
 
@@ -249,13 +251,13 @@ class Organism:
                     genotype[i] = np.subtract(genotype[i], self.get_mutation_vector(deviation))
                 i += 1
             # nm += 1
-            print('Mutated genotype: ' + str(genotype))
+            #print('Mutated genotype: ' + str(genotype))
         else:
             print('Cannot do mutation')
         return genotype  # , nm
 
     def event_provability(self, genotype):
-        number_events = np.random.binomial(len(genotype), 0.5)
+        number_events = np.random.binomial(len(genotype)+1, 0.5)
         # print('number events = ' + str(number_events))
         number_duplications = math.ceil(number_events * self.gen_duplication_rate)
         # print('num dup: ' + str(number_duplications))
@@ -283,12 +285,12 @@ class Organism:
                 [n_dup, n_del] = self.event_provability(genotype)
                 # print(n_dup)
                 genotype = duplication_loop(genotype, n_dup)
-                print('------')
+                #print('------')
                 genotype = deletion_loop(genotype, n_del)
-                print('------')
+                #print('------')
                 # print(len(genotype))
                 genotype = self.mutation(genotype, self.mutation_rate)  # , nm)
-                print('------')
+                #print('------')
                 # print(len(genotype))
             else:
                 sys.exit("Organism doesn't exist")
@@ -300,15 +302,15 @@ class Organism:
         """
         [fitness_son, son_distance, size_son] = self.evaluate(son_genotype)
         [fitness_father, father_distance, size_father] = self.evaluate(father_genotype)
-        print('Son genotype: ' + str(son_genotype))
+        #print('Son genotype: ' + str(son_genotype))
         # print('Son fitness : ' + str(fitness_son))
         # print('Son distance to optimum ' + str(son_distance))
-        print('Son size: ' + str(size_son))
-        print('Father genotype: ' + str(father_genotype))
+        #print('Son size: ' + str(size_son))
+        #print('Father genotype: ' + str(father_genotype))
         # print('Father fitness : ' + str(fitness_father))
-        print('Father distance to optimum ' + str(father_distance))
-        print('Son distance to optimum ' + str(son_distance))
-        print('Father size: ' + str(size_father))
+        #print('Father distance to optimum ' + str(father_distance))
+        #print('Son distance to optimum ' + str(son_distance))
+        #print('Father size: ' + str(size_father))
         # if fitness_son < fitness_father:
         if son_distance <= father_distance:
             # print("Son's phenotype " + str(son_genotype))
@@ -323,13 +325,13 @@ class Organism:
         """
         fitness_son, son_distance = self.evaluate_FGM(son_phenotype)
         fitness_father, father_distance = self.evaluate_FGM(father_phenotype)
-        print('Son genotype: ' + str(son_phenotype))
+        #print('Son genotype: ' + str(son_phenotype))
         # print('Son fitness : ' + str(fitness_son))
         # print('Son distance to optimum ' + str(son_distance))
-        print('Father genotype: ' + str(father_phenotype))
+        #print('Father genotype: ' + str(father_phenotype))
         # print('Father fitness : ' + str(fitness_father))
-        print('Father distance to optimum ' + str(father_distance))
-        print('Son distance to optimum ' + str(son_distance))
+        #print('Father distance to optimum ' + str(father_distance))
+        #print('Son distance to optimum ' + str(son_distance))
         # if fitness_son < fitness_father:
         if son_distance <= father_distance:
             # print("Son's phenotype " + str(son_genotype))
@@ -381,19 +383,19 @@ class Organism:
     def model_FGM(self, father_phenotype):  # , number_mutations ,nm
         # son_phenotype, nm = self.mutation(father_phenotype, self.mutation_rate, nm)
         son_phenotype = self.mutation(father_phenotype, self.mutation_rate)
-        print('Son ' + str(son_phenotype))
+        #print('Son ' + str(son_phenotype))
         # print('Number_mut = ' + str(number_mutations))
         selected_phenotype, fitness_value, distance_value = self.selection_FGM(son_phenotype,
                                                                                               father_phenotype)
-        print('Selected phenotype : ' + str(selected_phenotype))
-        print('Fitness of selected phenotype : ' + str(fitness_value))
-        print('Distance to optimum : ' + str(distance_value))
+        #print('Selected phenotype : ' + str(selected_phenotype))
+        #print('Fitness of selected phenotype : ' + str(fitness_value))
+        #print('Distance to optimum : ' + str(distance_value))
 
         return selected_phenotype, fitness_value, distance_value  # , number_mutations
 
     def model(self, father_genotype):  # , nm):
         # son_genotype, nm = self.reproduction(father_genotype, nm)
-        son_genotype = self.reproduction(father_genotype)
+        son_genotype = self.reproduction(copy.deepcopy(father_genotype))
         selected_genotype, fitness_selected, distance_selected, size_selected = self.selection(son_genotype,
                                                                                                father_genotype)
         selected_phenotype = self.create_phenotype(self.initial_point, selected_genotype)
@@ -442,7 +444,7 @@ class Organism:
                         print('Generacion: ', i)
                         selected_phenotype, fitness_selected, distance_selected = self.model_FGM(father_phenotype)
                         father_phenotype = selected_phenotype
-                        print('Father: ' + str(father_genotype))
+                        #print('Father: ' + str(father_genotype))
                         fitness_value = fitness_selected
                         distance_value = distance_selected
                         i += 1
@@ -456,7 +458,7 @@ class Organism:
                         print('Generacion: ', i)
                         selected_phenotype, fitness_selected, distance_selected = self.model_FGM(father_phenotype)
                         father_phenotype = selected_phenotype
-                        print('Father: ' + str(father_genotype))
+                        #print('Father: ' + str(father_genotype))
                         fitness_value = fitness_selected
                         distance_value = distance_selected
                         i += 1
@@ -476,7 +478,7 @@ class Organism:
                         selected_genotype, fitness_selected, distance_selected, size_selected = self.model(
                             father_genotype)
                         father_genotype = selected_genotype
-                        print('Father: ' + str(father_genotype))
+                        #print('Father: ' + str(father_genotype))
                         fitness_value = fitness_selected
                         distance_value = distance_selected
                         gen_len = size_selected
@@ -493,7 +495,7 @@ class Organism:
                         selected_genotype, fitness_selected, distance_selected, size_selected = self.model(
                             father_genotype)  # , nm)
                         father_genotype = selected_genotype
-                        print('Father: ' + str(father_genotype))
+                        #print('Father: ' + str(father_genotype))
                         fitness_value = fitness_selected
                         distance_value = distance_selected
                         gen_len = size_selected
@@ -502,6 +504,7 @@ class Organism:
                                         gen_size, gen_len, i)  # , number_mutations #, nm)
                     break
 
+            # df1 = pd.DataFrame()
             print_graphs(generations, fitness_values, distance_values, gen_size)  # , number_mutations)
 
 
@@ -509,11 +512,11 @@ def main():
     model = Organism(
         fgm_mode=False,  # True = FG model, False = proposed model
         gen_mode=False,  # True = number of generations , False = until optimum is reached
-        initial_point=[10.0, 10.0, 10.0],  # Initial point
-        n_dim=3,
-        mutation_rate=0.8,  # keep rates minimum
-        gen_duplication_rate=0.9,
-        gen_deletion_rate=0.0,
+        initial_point=[10.0],  # Initial point
+        n_dim=1,
+        mutation_rate=0.5,  # keep rates minimum
+        gen_duplication_rate=0.5,
+        gen_deletion_rate=0.5,
         n_generations=10,
         epsilon=0.5
     )
