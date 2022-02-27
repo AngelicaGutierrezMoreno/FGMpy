@@ -506,8 +506,9 @@ class Organism:
                     break
 
             # df1 = pd.DataFrame()
-            print_graphs(generations, fitness_values, distance_values, gen_size)  # , number_mutations)
 
+            #print_graphs(generations, fitness_values, distance_values, gen_size)  # , number_mutations)
+            return father_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size
 
 def main(_fgm_mode,
          _gen_mode,
