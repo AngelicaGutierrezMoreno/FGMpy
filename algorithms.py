@@ -26,7 +26,7 @@ def exist(genotype):
     # print('Genotypes length : ' + str(len(genotype)))
     # check_dim(genotype)
     if len(genotype) == 0:
-        sys.exit("Genotype does't exist anymore")
+        return False
     else:
         # print('Length genotype is ' + str(len(genotype)) + 'in exist(genotype) function')
         return True
@@ -40,7 +40,9 @@ def sum_genes(genotype):
         # print(type(phenotype))
         # print('suma de genes : ' + str(phenotype))
     elif len(genotype) == 0:
-        sys.exit("organism doesn't exist anymore")
+        print("organism doesn't exist anymore")
+        phenotype = []
+        quit()
     else:
         # print('Genotype 0 = ' + str(genotype))
         phenotype = genotype
@@ -346,7 +348,10 @@ class Organism:
         if self.fgm_mode:
             phenotype = np.subtract(initial_point, genotype)
         else:
-            phenotype = np.subtract(initial_point, sum_genes(genotype))
+            if exist(genotype):
+                phenotype = np.subtract(initial_point, sum_genes(genotype))
+            else:
+                phenotype = []
         return phenotype
 
     def create_father(self):
@@ -397,10 +402,18 @@ class Organism:
     def model(self, father_genotype):  # , nm):
         # son_genotype, nm = self.reproduction(father_genotype, nm)
         son_genotype = self.reproduction(copy.deepcopy(father_genotype))
-        selected_genotype, fitness_selected, distance_selected, size_selected = self.selection(son_genotype,
+        print("Father---", father_genotype)
+        print("Son-----", son_genotype)
+        if(exist(son_genotype)):
+            selected_genotype, fitness_selected, distance_selected, size_selected = self.selection(son_genotype,
                                                                                                father_genotype)
-        selected_phenotype = self.create_phenotype(self.initial_point, selected_genotype)
-
+            selected_phenotype = self.create_phenotype(self.initial_point, selected_genotype)
+        else:
+            selected_genotype=[]
+            selected_phenotype=[]
+            fitness_selected = 0
+            distance_selected = 0
+            size_selected = 0
         # print('Number_ mutations' + str(nm))
         # print('Son genotype ' + str(son_genotype))
         print('Best suited genotype is : ' + str(selected_genotype))
@@ -509,7 +522,11 @@ class Organism:
 
             #print_graphs(generations, fitness_values, distance_values, gen_size)  # , number_mutations)
             best_genotype = father_genotype
-            best_phenotype = self.create_phenotype(self.initial_point, best_genotype)
+            if(exist(best_genotype)):
+                best_phenotype = self.create_phenotype(self.initial_point, best_genotype)
+            else:
+                best_phenotype = []
+
 
             return best_phenotype, best_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size
 
