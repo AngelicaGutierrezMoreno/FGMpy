@@ -254,7 +254,7 @@ class Organism:
         elif len(genotype) == 0:
             print("organism doesn't exist anymore")
             phenotype = self.initial_point
-            quit()
+            #quit()
         else:
             # print('Genotype 0 = ' + str(genotype))
             phenotype = genotype
@@ -290,21 +290,21 @@ class Organism:
                 # [n_dup, n_del] = self.event_selection(number_events)
                 # rate = self.gen_duplication_rate
                 number_events = self.event_provability(genotype)
-                print('Number of events to do: ' + str(number_events))
+                #print('Number of events to do: ' + str(number_events))
                 e = 1
                 while e <= number_events:
                     pos = random.randint(0, len(genotype)-1)
-                    print('gen position to duplicate: ' + str(pos))
+                    #print('gen position to duplicate: ' + str(pos))
                     prob = random.uniform(0, np.add(self.gen_duplication_rate, self.gen_deletion_rate))
-                    print('Probability random: ' + str(prob))
+                    #print('Probability random: ' + str(prob))
                     if prob <= self.gen_deletion_rate:
-                        print('Deletion won')
+                        #print('Deletion won')
                         genotype = deletion(genotype, pos)
                     else:
-                        print('Duplication won')
+                        #print('Duplication won')
                         genotype = duplication(genotype, pos)
                     e += 1
-                    print('Genotype ' + str(genotype))
+                    #print('Genotype ' + str(genotype))
                 # print(n_dup)
                 #for each event, choose random gene from the the father (so no duplication of gene twice)
                 #the choose which event to do.
@@ -318,7 +318,9 @@ class Organism:
                 #print('------')
                 # print(len(genotype))
             else:
-                sys.exit("Organism doesn't exist")
+                print("Organism doesn't exist")
+                #sys.exit("Organism doesn't exist")
+                genotype = [self.initial_point]
         return genotype  # , nm
 
     def selection(self, son_genotype, father_genotype):
