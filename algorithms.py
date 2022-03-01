@@ -32,22 +32,7 @@ def exist(genotype):
         return True
 
 
-def sum_genes(genotype):
-    # print('Initializing sum_genes')
-    # print('Genotype sum ' + str(genotype))
-    if len(genotype) >= 1:
-        phenotype = np.add.reduce(genotype)
-        # print(type(phenotype))
-        # print('suma de genes : ' + str(phenotype))
-    elif len(genotype) == 0:
-        print("organism doesn't exist anymore")
-        phenotype = []
-        quit()
-    else:
-        # print('Genotype 0 = ' + str(genotype))
-        phenotype = genotype
-    # print('Ending sum_genes')
-    return phenotype
+
 
     # ----Declaration of events
 
@@ -259,6 +244,23 @@ class Organism:
             print('Cannot do mutation')
         return genotype  # , nm
 
+    def sum_genes(self, genotype):
+        # print('Initializing sum_genes')
+        # print('Genotype sum ' + str(genotype))
+        if len(genotype) >= 1:
+            phenotype = np.add.reduce(genotype)
+            # print(type(phenotype))
+            # print('suma de genes : ' + str(phenotype))
+        elif len(genotype) == 0:
+            print("organism doesn't exist anymore")
+            phenotype = self.initial_point
+            quit()
+        else:
+            # print('Genotype 0 = ' + str(genotype))
+            phenotype = genotype
+        # print('Ending sum_genes')
+        return phenotype
+
     def event_provability(self, genotype):
         probability = self.gen_duplication_rate + self.gen_deletion_rate
         number_events = np.random.binomial(len(genotype), probability)
@@ -369,17 +371,17 @@ class Organism:
             phenotype = np.add(initial_point, genotype)
         else:
             if exist(genotype):
-                phenotype = np.add(initial_point, sum_genes(genotype))
+                phenotype = np.add(initial_point, self.sum_genes(genotype))
             else:
-                phenotype = []
+                phenotype = self.initial_point
         return phenotype
 
     def create_father(self):
         if self.fgm_mode:
             father_genotype = self.initial_genotype()
         else:
-            #father_genotype = [self.initial_genotype()]
-            father_genotype = [[-1.0]]
+            father_genotype = [self.initial_genotype()]
+            #father_genotype = [[-1.0]]
         return father_genotype
 
     def get_father_data(self, initial_point):
@@ -425,16 +427,19 @@ class Organism:
         son_genotype = self.reproduction(copy.deepcopy(father_genotype))
         print("Father---", father_genotype)
         print("Son-----", son_genotype)
-        if exist(son_genotype):
-            selected_genotype, fitness_selected, distance_selected, size_selected = self.selection(son_genotype,
+        # if exist(son_genotype):
+        #     selected_genotype, fitness_selected, distance_selected, size_selected = self.selection(son_genotype,
+        #                                                                                        father_genotype)
+        #     selected_phenotype = self.create_phenotype(self.initial_point, selected_genotype)
+        # else:
+        #     selected_genotype=[]
+        #     selected_phenotype=[]
+        #     fitness_selected = 0
+        #     distance_selected = 0
+        #     size_selected = 0
+        selected_genotype, fitness_selected, distance_selected, size_selected = self.selection(son_genotype,
                                                                                                father_genotype)
-            selected_phenotype = self.create_phenotype(self.initial_point, selected_genotype)
-        else:
-            selected_genotype=[]
-            selected_phenotype=[]
-            fitness_selected = 0
-            distance_selected = 0
-            size_selected = 0
+        selected_phenotype = self.create_phenotype(self.initial_point, selected_genotype)
         # print('Number_ mutations' + str(nm))
         # print('Son genotype ' + str(son_genotype))
         print('Best suited genotype is : ' + str(selected_genotype))
@@ -547,7 +552,7 @@ class Organism:
             if(exist(best_genotype)):
                 best_phenotype = self.create_phenotype(self.initial_point, best_genotype)
             else:
-                best_phenotype = []
+                best_phenotype = self.initial_point
 
 
             return best_phenotype, best_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size, gen_length
@@ -594,8 +599,8 @@ if __name__ == '__main__':
         _initial_point=[10.0],  # Initial point
         _n_dim=1,
         _mutation_rate=0.0,  # keep rates minimum
-        _gen_duplication_rate=0.5,
-        _gen_deletion_rate=0.0,
+        _gen_duplication_rate=0.0,
+        _gen_deletion_rate=0.6,
         _n_generations=10,
         _epsilon=0.5
     )
