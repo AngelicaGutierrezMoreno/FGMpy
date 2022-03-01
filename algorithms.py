@@ -234,7 +234,7 @@ class Organism:
         return optimum
 
     def initial_genotype(self):
-        genotype = NormalDist(0.0, 0.5).samples(self.n_dim)
+        genotype = NormalDist(0.0, 0.1).samples(self.n_dim)
         # print(len(genotype))
         return genotype
 
@@ -260,13 +260,14 @@ class Organism:
         return genotype  # , nm
 
     def event_provability(self, genotype):
-        number_events = np.random.binomial(len(genotype)+1, 0.5)
+        probability = self.gen_duplication_rate + self.gen_deletion_rate
+        number_events = np.random.binomial(len(genotype), probability)
         # print('number events = ' + str(number_events))
-        number_duplications = math.ceil(number_events * self.gen_duplication_rate)
+        #number_duplications = math.ceil(number_events * self.gen_duplication_rate)
         # print('num dup: ' + str(number_duplications))
-        number_deletions = math.ceil(number_events * self.gen_deletion_rate)
+        #number_deletions = math.ceil(number_events * self.gen_deletion_rate)
         # print('Num delet ' + str(number_deletions))
-        return number_duplications, number_deletions
+        return number_events
 
     def distance_optimum(self, phenotype):
         distance_optimum = distance.euclidean(self.get_optimum(), phenotype)
@@ -275,6 +276,7 @@ class Organism:
 
     def reproduction(self, x_genotype):  # , nm):
         # check_dim(genotype)
+        print('Iniciando reproducción')
         genotype = x_genotype
         if self.fgm_mode:
             while exist(genotype):
@@ -285,11 +287,29 @@ class Organism:
                 # number_events = self.event_provability(genotype)
                 # [n_dup, n_del] = self.event_selection(number_events)
                 # rate = self.gen_duplication_rate
-                [n_dup, n_del] = self.event_provability(genotype)
+                number_events = self.event_provability(genotype)
+                print('Number of events to do: ' + str(number_events))
+                e = 1
+                while e <= number_events:
+                    pos = random.randint(0, len(genotype)-1)
+                    print('gen position to duplicate: ' + str(pos))
+                    prob = random.uniform(0, np.add(self.gen_duplication_rate, self.gen_deletion_rate))
+                    print('Probability random: ' + str(prob))
+                    if prob <= self.gen_deletion_rate:
+                        print('Deletion won')
+                        genotype = deletion(genotype, pos)
+                    else:
+                        print('Duplication won')
+                        genotype = duplication(genotype, pos)
+                    e += 1
+                    print('Genotype ' + str(genotype))
                 # print(n_dup)
-                genotype = duplication_loop(genotype, n_dup)
+                #for each event, choose random gene from the the father (so no duplication of gene twice)
+                #the choose which event to do.
+                #Suma los rates de los eventos y si es menor que deletion rate es una deletion if its higher es una duplicacion
+                #genotype = duplication_loop(genotype, n_dup)
                 #print('------')
-                genotype = deletion_loop(genotype, n_del)
+                #genotype = deletion_loop(genotype, n_del)
                 #print('------')
                 # print(len(genotype))
                 genotype = self.mutation(genotype, self.mutation_rate)  # , nm)
@@ -346,10 +366,10 @@ class Organism:
     def create_phenotype(self, initial_point, genotype):
         # phenotype = np.add.reduce( genotype)
         if self.fgm_mode:
-            phenotype = np.subtract(initial_point, genotype)
+            phenotype = np.add(initial_point, genotype)
         else:
             if exist(genotype):
-                phenotype = np.subtract(initial_point, sum_genes(genotype))
+                phenotype = np.add(initial_point, sum_genes(genotype))
             else:
                 phenotype = []
         return phenotype
@@ -358,7 +378,8 @@ class Organism:
         if self.fgm_mode:
             father_genotype = self.initial_genotype()
         else:
-            father_genotype = [self.initial_genotype()]
+            #father_genotype = [self.initial_genotype()]
+            father_genotype = [[-1.0]]
         return father_genotype
 
     def get_father_data(self, initial_point):
@@ -404,7 +425,7 @@ class Organism:
         son_genotype = self.reproduction(copy.deepcopy(father_genotype))
         print("Father---", father_genotype)
         print("Son-----", son_genotype)
-        if(exist(son_genotype)):
+        if exist(son_genotype):
             selected_genotype, fitness_selected, distance_selected, size_selected = self.selection(son_genotype,
                                                                                                father_genotype)
             selected_phenotype = self.create_phenotype(self.initial_point, selected_genotype)
@@ -441,7 +462,7 @@ class Organism:
         nm = 1
         number_mutations = [nm]
         print('num_mut = ' + str(number_mutations))
-        generations = [i]
+        generations = []
         fitness_values = [fitness_value]
         distance_values = [distance_value]
         gen_size = [size_value]
@@ -522,13 +543,16 @@ class Organism:
 
             #print_graphs(generations, fitness_values, distance_values, gen_size)  # , number_mutations)
             best_genotype = father_genotype
+            gen_length = size_selected
             if(exist(best_genotype)):
                 best_phenotype = self.create_phenotype(self.initial_point, best_genotype)
             else:
                 best_phenotype = []
 
 
-            return best_phenotype, best_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size
+            return best_phenotype, best_genotype, fitness_value, distance_value, i, generations, fitness_values, distance_values, gen_size, gen_length
+
+
 
 def main(_fgm_mode,
          _gen_mode,
@@ -569,9 +593,9 @@ if __name__ == '__main__':
         _gen_mode=False,  # True = number of generations , False = until optimum is reached
         _initial_point=[10.0],  # Initial point
         _n_dim=1,
-        _mutation_rate=0.5,  # keep rates minimum
+        _mutation_rate=0.0,  # keep rates minimum
         _gen_duplication_rate=0.5,
-        _gen_deletion_rate=0.5,
+        _gen_deletion_rate=0.0,
         _n_generations=10,
         _epsilon=0.5
     )
