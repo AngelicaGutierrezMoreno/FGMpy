@@ -48,21 +48,46 @@ def main():
               'Best phenotype', 'Best genotype', 'Distance to optimum', 'Total generations', 'Gen size', 'PlotName']
     # ['id', 'fgm_mode', 'gen_mode', 'inicial_point', 'n_dim', 'mutation_rate', 'gen_duplication_rate', 'gen_deletion_rate', 'n_generations', 'epsilon]
     experiments = [
-        # # To debug
-        # ['plot1D1', False, False, [10.0], 1, 0.0, 0.5, 0.5, 10, 0.001],
-        # ['plot1D2', False, False, [10.0], 1, 0.0, 0.5, 0.5, 10, 0.001],
-        # ['plot1D3', False, False, [10.0], 1, 0.0, 0.0, 0.5, 10, 0.001],
-        # ['plot1D4', False, False, [10.0], 1, 0.0, 0.0, 0.5, 10, 0.001],
-        # ['plot1D5', False, False, [10.0], 1, 0.0, 0.5, 0.0, 10, 0.001],
-        # ['plot1D6', False, False, [10.0], 1, 0.0, 0.5, 0.0, 10, 0.001],
+        # 1D - plot
+        ['plot1D1-1mut', False, False, [10.0], 1, 0.01, 0.5, 0.5, 10000, 0.001],
+        ['plot1D2-0mut', False, False, [10.0], 1, 0.01, 0.0, 0.0, 10000, 0.001],
+        ['plot1D3-0dup', False, False, [10.0], 1, 0.01, 0.0, 0.5, 10, 0.001],
+        ['plot1D4-0dup', False, False, [10.0], 1, 0.05, 0.0, 0.5, 10, 0.001],
+        ['plot1D5-0del', False, False, [10.0], 1, 0.1, 0.5, 0.0, 10, 0.001],
+        ['plot1D6-0del', False, False, [10.0], 1, 0.15, 0.5, 0.0, 10, 0.001],
 
         # 2D - changes
         ['plot2D1-1mut', False, False, [10.0, 0.0], 2, 0.01, 0.5, 0.5, 10000, 0.001],
         ['plot2D2-0mut', False, False, [10.0, 0.0], 2, 0.01, 0.0, 0.0, 10000, 0.001],
-        #['plot2D3-0dup', False, False, [10.0, 0.0], 2, 0.01, 0.0, 0.5, 10, 0.001],
-        #['plot2D4-0dup', False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.5, 10, 0.001],
-        #['plot2D5-0del', False, False, [10.0, 0.0], 2, 0.1, 0.5, 0.0, 10, 0.001],
-        #['plot2D6-0del', False, False, [10.0, 0.0], 2, 0.15, 0.5, 0.0, 10, 0.001]
+        ['plot2D3-0dup', False, False, [10.0, 0.0], 2, 0.01, 0.0, 0.5, 10, 0.001],
+        ['plot2D4-0dup', False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.5, 10, 0.001],
+        ['plot2D5-0del', False, False, [10.0, 0.0], 2, 0.1, 0.5, 0.0, 10, 0.001],
+        ['plot2D6-0del', False, False, [10.0, 0.0], 2, 0.15, 0.5, 0.0, 10, 0.001],
+
+        # 3D - changes
+        ['plot3D1-1mut', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.5, 0.5, 10000, 0.001],
+        ['plot3D2-0mut', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.0, 0.0, 10000, 0.001],
+        ['plot3D3-0dup', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.0, 0.5, 10, 0.001],
+        ['plot3D4-0dup', False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.5, 10, 0.001],
+        ['plot3D5-0del', False, False, [10.0, 0.0, 0.0], 3, 0.1, 0.5, 0.0, 10, 0.001],
+        ['plot3D6-0del', False, False, [10.0, 0.0, 0.0], 3, 0.15, 0.5, 0.0, 10, 0.001],
+
+        # 4D - changes
+        ['plot4D1-1mut', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.5, 0.5, 10000, 0.001],
+        ['plot4D2-0mut', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.0, 0.0, 10000, 0.001],
+        ['plot4D3-0dup', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.0, 0.5, 10, 0.001],
+        ['plot4D4-0dup', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.5, 10, 0.001],
+        ['plot4D5-0del', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.1, 0.5, 0.0, 10, 0.001],
+        ['plot4D6-0del', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.15, 0.5, 0.0, 10, 0.001],
+
+        # 5D - changes
+        ['plot5D1-1mut', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.5, 0.5, 10000, 0.001],
+        ['plot5D2-0mut', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.0, 0.0, 10000, 0.001],
+        ['plot5D3-0dup', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.0, 0.5, 10, 0.001],
+        ['plot5D4-0dup', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.5, 10, 0.001],
+        ['plot5D5-0del', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.1, 0.5, 0.0, 10, 0.001],
+        ['plot5D6-0del', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.15, 0.5, 0.0, 10, 0.001]
+
 
     ]
 
