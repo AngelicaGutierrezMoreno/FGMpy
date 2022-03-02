@@ -67,7 +67,7 @@ def fitness_function(phenotype):
 def duplication_loop(genotype, num_repeticiones):
     i = 1
     if num_repeticiones > 0:
-        print("Iniciando gen duplication")
+        #print("Iniciando gen duplication")
         while i <= num_repeticiones:
             if len(genotype) == 1:
                 genotype = duplication(genotype, 0)
@@ -78,9 +78,6 @@ def duplication_loop(genotype, num_repeticiones):
                 # print('Genotype after duplication : ' + str(genotype))
             i = i + 1
         #print('Genotype after duplication : ' + str(genotype))
-    else:
-        print('No gens will be duplicated')
-        #print('Genotype ' + str(genotype))
     return genotype
 
 
@@ -88,7 +85,7 @@ def deletion_loop(genotype, num_repeticiones):
     i = 1
     # check_dim(genotype)
     if num_repeticiones > 0:
-        print("Iniciando gen deletion")
+        #print("Iniciando gen deletion")
         while i <= num_repeticiones:
             pos = random.randint(0, len(genotype) - 1)
             # print('Position to delete ' + str(pos))
@@ -96,9 +93,6 @@ def deletion_loop(genotype, num_repeticiones):
             # print('Genotype after deletion : ' + str(genotype))
             i = i + 1
         #print('Genotype after deletion : ' + str(genotype))
-    else:
-        print('No gens will be deleted')
-        #print('Genotype ' + str(genotype))
     return genotype
 
 
@@ -172,8 +166,8 @@ def add_to_elements(fitness_values, fitness_value, distance_values,
     distance_values.append(distance_value)
     gen_size.append(gen_len)
     # number_mutations.append(nm)
-    print('Generations: ' + str(generations))
-    print('Gen size vector : ' + str(gen_size))
+    #print('Generations: ' + str(generations))
+    #print('Gen size vector : ' + str(gen_size))
 
 
 def add_to_elements_mutation(fitness_values, fitness_value, distance_values, distance_value, generations, i): #,number_mutations, nm):
@@ -181,7 +175,7 @@ def add_to_elements_mutation(fitness_values, fitness_value, distance_values, dis
     fitness_values.append(fitness_value)
     distance_values.append(distance_value)
     #number_mutations.append(nm)
-    print('Generations: ' + str(generations))
+    #print('Generations: ' + str(generations))
 
 
 def is_favorable(son_genotype, father_genotype, organism):
@@ -230,7 +224,7 @@ class Organism:
 
     def mutation(self, genotype, deviation):  # , nm):
         if exist(genotype):
-            print("Iniciando mutacion")
+            #print("Iniciando mutacion")
             i = 0
             while i <= len(genotype) - 1:
                 if self.fgm_mode:
@@ -240,8 +234,6 @@ class Organism:
                 i += 1
             # nm += 1
             #print('Mutated genotype: ' + str(genotype))
-        else:
-            print('Cannot do mutation')
         return genotype  # , nm
 
     def sum_genes(self, genotype):
@@ -252,7 +244,7 @@ class Organism:
             # print(type(phenotype))
             # print('suma de genes : ' + str(phenotype))
         elif len(genotype) == 0:
-            print("organism doesn't exist anymore")
+            #print("organism doesn't exist anymore")
             phenotype = self.initial_point
             #quit()
         else:
@@ -278,7 +270,7 @@ class Organism:
 
     def reproduction(self, x_genotype):  # , nm):
         # check_dim(genotype)
-        print('Iniciando reproducción')
+        #print('Iniciando reproducción')
         genotype = x_genotype
         if self.fgm_mode:
             while exist(genotype):
@@ -318,7 +310,7 @@ class Organism:
                 #print('------')
                 # print(len(genotype))
             else:
-                print("Organism doesn't exist")
+                #print("Organism doesn't exist")
                 #sys.exit("Organism doesn't exist")
                 genotype = [self.initial_point]
         return genotype  # , nm
@@ -340,10 +332,12 @@ class Organism:
         #print('Father size: ' + str(size_father))
         # if fitness_son < fitness_father:
         if son_distance <= father_distance:
-            # print("Son's phenotype " + str(son_genotype))
+            print("Son's phenotype " + str(son_genotype))
+            print("Keep son")
             return son_genotype, fitness_son, son_distance, size_son
         else:
-            # print("Father's phenotype" + str(father_phenotype))
+            print("Father's phenotype" + str(father_genotype))
+            print("keep father")
             return father_genotype, fitness_father, father_distance, size_father
 
     def selection_FGM(self, son_phenotype, father_phenotype):
@@ -427,8 +421,8 @@ class Organism:
     def model(self, father_genotype):  # , nm):
         # son_genotype, nm = self.reproduction(father_genotype, nm)
         son_genotype = self.reproduction(copy.deepcopy(father_genotype))
-        print("Father---", father_genotype)
-        print("Son-----", son_genotype)
+        #print("Father---", father_genotype)
+        #print("Son-----", son_genotype)
         # if exist(son_genotype):
         #     selected_genotype, fitness_selected, distance_selected, size_selected = self.selection(son_genotype,
         #                                                                                        father_genotype)
@@ -476,9 +470,9 @@ class Organism:
 
         if self.fgm_mode:
             # Inicia FGM
-            print('FGM selected')
+            #print('FGM selected')
             while father_phenotype.all():
-                print('Exist fath_gen')
+                #print('Exist fath_gen')
                 if self.gen_mode:
                     # Initialize FGM for determined number of generations
                     for i in range(self.n_generations):
@@ -531,7 +525,7 @@ class Organism:
 
                 else:
                     # Initialize model until optimum is reached
-                    while self.epsilon <= distance_value:
+                    while self.epsilon <= distance_value: # or i == self.n_generations:
                         print('########################################')
                         print('Generacion: ', i)
                         selected_genotype, fitness_selected, distance_selected, size_selected = self.model(
@@ -597,9 +591,9 @@ def main(_fgm_mode,
 if __name__ == '__main__':
     main(
         _fgm_mode=False,  # True = FG model, False = proposed model
-        _gen_mode=False,  # True = number of generations , False = until optimum is reached
-        _initial_point=[10.0],  # Initial point
-        _n_dim=1,
+        _gen_mode=True,  # True = number of generations , False = until optimum is reached
+        _initial_point=[10.0, 0.0],  # Initial point
+        _n_dim=2,
         _mutation_rate=0.0,  # keep rates minimum
         _gen_duplication_rate=0.0,
         _gen_deletion_rate=0.6,
