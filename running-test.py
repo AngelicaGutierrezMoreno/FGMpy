@@ -11,9 +11,21 @@ def graph_fitnessVSgenerations(fitness_values, generations, f):
     plt.xlabel('Generation')
     plt.ylabel('Fitness')
     # plt.show()
-    file_name = 'fitnessvsgen_' + f
-    plt.savefig(file_name)
-    plt.clf()
+    # file_name = 'fitnessvsgen_' + f
+    # plt.savefig(file_name)
+    # plt.clf() #cleans the graph
+
+
+def fitness_graphs(graphs_fitness_val, graphs_generation_val, f):
+    for i in range(int(len(graphs_fitness_val))):
+        plt.title("FITNESS vs GENERATIONS")
+        # Plot the points using matplotlib
+        plt.plot(graphs_generation_val[i], graphs_fitness_val[i])
+        plt.xlabel('Generation')
+        plt.ylabel('Fitness')
+        file_name = 'fitnessvsgen_' + f
+        plt.savefig(file_name)
+        plt.clf()  # cleans the graph
 
 
 def graph_distanceVSgenerations(distance_values, generations, f):
@@ -26,7 +38,7 @@ def graph_distanceVSgenerations(distance_values, generations, f):
     # plt.show()
     file_name = 'distancevsgen_' + f
     plt.savefig(file_name)
-    plt.clf()
+    # plt.clf()
 
 
 def graph_numGensVSgenerations(gen_size, generations, f):
@@ -39,7 +51,18 @@ def graph_numGensVSgenerations(gen_size, generations, f):
     # plt.show()
     file_name = 'numgensvsgen_' + f
     plt.savefig(file_name)
-    plt.clf()
+    # plt.clf()
+
+def gen_graphs(graphs_gen_val, graphs_generation_val, f):
+    for i in range(int(len(graphs_gen_val))):
+        plt.title("GEN SIZE vs GENERATIONS")
+        # Plot the points using matplotlib
+        plt.plot(graphs_generation_val[i], graphs_gen_val[i])
+        plt.xlabel('Generation')
+        plt.ylabel('Gen size')
+        file_name = 'numgensvsgen_' + f
+        plt.savefig(file_name)
+        plt.clf()  # cleans the graph
 
 
 def main():
@@ -48,50 +71,54 @@ def main():
               'Best phenotype', 'Best genotype', 'Distance to optimum', 'Total generations', 'Gen size', 'PlotName']
     # ['id', 'fgm_mode', 'gen_mode', 'inicial_point', 'n_dim', 'mutation_rate', 'gen_duplication_rate', 'gen_deletion_rate', 'n_generations', 'epsilon]
     experiments = [
-        # 1D - plot
-        ['plot1D1-1mut', False, False, [10.0], 1, 0.01, 0.5, 0.5, 10000, 0.001],
-        ['plot1D2-0mut', False, False, [10.0], 1, 0.01, 0.0, 0.0, 10000, 0.001],
-        ['plot1D3-0dup', False, False, [10.0], 1, 0.01, 0.0, 0.5, 10, 0.001],
-        ['plot1D4-0dup', False, False, [10.0], 1, 0.05, 0.0, 0.5, 10, 0.001],
-        ['plot1D5-0del', False, False, [10.0], 1, 0.1, 0.5, 0.0, 10, 0.001],
-        ['plot1D6-0del', False, False, [10.0], 1, 0.15, 0.5, 0.0, 10, 0.001],
+        # # 1D - plot
+        # ['plot1D1-1mut', False, False, [10.0], 1, 0.01, 0.5, 0.5, 10000, 0.001],
+        # ['plot1D2-0mut', False, False, [10.0], 1, 0.01, 0.0, 0.0, 10000, 0.001],
+        # ['plot1D3-0dup', False, False, [10.0], 1, 0.01, 0.0, 0.5, 10000, 0.001],
+        # ['plot1D4-0dup', False, False, [10.0], 1, 0.05, 0.0, 0.5, 10000, 0.001],
+        # ['plot1D5-0del', False, False, [10.0], 1, 0.1, 0.5, 0.0, 10000, 0.001],
+        # ['plot1D6-0del', False, False, [10.0], 1, 0.15, 0.5, 0.0, 10000, 0.001],
 
         # 2D - changes
-        ['plot2D1-1mut', False, False, [10.0, 0.0], 2, 0.01, 0.5, 0.5, 10000, 0.001],
-        ['plot2D2-0mut', False, False, [10.0, 0.0], 2, 0.01, 0.0, 0.0, 10000, 0.001],
-        ['plot2D3-0dup', False, False, [10.0, 0.0], 2, 0.01, 0.0, 0.5, 10, 0.001],
-        ['plot2D4-0dup', False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.5, 10, 0.001],
-        ['plot2D5-0del', False, False, [10.0, 0.0], 2, 0.1, 0.5, 0.0, 10, 0.001],
-        ['plot2D6-0del', False, False, [10.0, 0.0], 2, 0.15, 0.5, 0.0, 10, 0.001],
+        ['plot2D1-1mut', False, False, [10.0, 0.0], 2, 0.01, 0.5, 0.5, 50, 0.001],
+        ['plot2D2-0mut', False, False, [10.0, 0.0], 2, 0.01, 0.0, 0.0, 50, 0.001],
 
-        # 3D - changes
-        ['plot3D1-1mut', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.5, 0.5, 10000, 0.001],
-        ['plot3D2-0mut', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.0, 0.0, 10000, 0.001],
-        ['plot3D3-0dup', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.0, 0.5, 10, 0.001],
-        ['plot3D4-0dup', False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.5, 10, 0.001],
-        ['plot3D5-0del', False, False, [10.0, 0.0, 0.0], 3, 0.1, 0.5, 0.0, 10, 0.001],
-        ['plot3D6-0del', False, False, [10.0, 0.0, 0.0], 3, 0.15, 0.5, 0.0, 10, 0.001],
+        # ['plot2D3-0dup', False, False, [10.0, 0.0], 2, 0.01, 0.6, 0.2, 10000, 0.001],
+        # ['plot2D4-0dup', False, False, [10.0, 0.0], 2, 0.01, 0.0, 0.0, 10000, 0.001],
 
-        # 4D - changes
-        ['plot4D1-1mut', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.5, 0.5, 10000, 0.001],
-        ['plot4D2-0mut', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.0, 0.0, 10000, 0.001],
-        ['plot4D3-0dup', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.0, 0.5, 10, 0.001],
-        ['plot4D4-0dup', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.5, 10, 0.001],
-        ['plot4D5-0del', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.1, 0.5, 0.0, 10, 0.001],
-        ['plot4D6-0del', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.15, 0.5, 0.0, 10, 0.001],
+        # ['plot2D5-0del', False, False, [10.0, 0.0], 2, 0.01, 0.2, 0.6, 10000, 0.001],
+        # ['plot2D6-0del', False, False, [10.0, 0.0], 2, 0.01, 0.0, 0.0, 10000, 0.001]
 
-        # 5D - changes
-        ['plot5D1-1mut', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.5, 0.5, 10000, 0.001],
-        ['plot5D2-0mut', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.0, 0.0, 10000, 0.001],
-        ['plot5D3-0dup', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.0, 0.5, 10, 0.001],
-        ['plot5D4-0dup', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.5, 10, 0.001],
-        ['plot5D5-0del', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.1, 0.5, 0.0, 10, 0.001],
-        ['plot5D6-0del', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.15, 0.5, 0.0, 10, 0.001]
-
+        # # 3D - changes
+        # ['plot3D1-1mut', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.5, 0.5, 10000, 0.001],
+        # ['plot3D2-0mut', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.0, 0.0, 10000, 0.001],
+        # ['plot3D3-0dup', False, False, [10.0, 0.0, 0.0], 3, 0.01, 0.0, 0.5, 10000, 0.001],
+        # ['plot3D4-0dup', False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.5, 10000, 0.001],
+        # ['plot3D5-0del', False, False, [10.0, 0.0, 0.0], 3, 0.1, 0.5, 0.0, 10000, 0.001],
+        # ['plot3D6-0del', False, False, [10.0, 0.0, 0.0], 3, 0.15, 0.5, 0.0, 10000, 0.001],
+        #
+        # # 4D - changes
+        # ['plot4D1-1mut', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.5, 0.5, 10000, 0.001],
+        # ['plot4D2-0mut', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.0, 0.0, 10000, 0.001],
+        # ['plot4D3-0dup', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.01, 0.0, 0.5, 10000, 0.001],
+        # ['plot4D4-0dup', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.5, 10000, 0.001],
+        # ['plot4D5-0del', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.1, 0.5, 0.0, 10000, 0.001],
+        # ['plot4D6-0del', False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.15, 0.5, 0.0, 10000, 0.001],
+        #
+        # # 5D - changes
+        # ['plot5D1-1mut', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.5, 0.5, 10000, 0.001],
+        # ['plot5D2-0mut', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.0, 0.0, 10000, 0.001],
+        # ['plot5D3-0dup', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.01, 0.0, 0.5, 10000, 0.001],
+        # ['plot5D4-0dup', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.5, 10000, 0.001],
+        # ['plot5D5-0del', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.1, 0.5, 0.0, 10000, 0.001],
+        # ['plot5D6-0del', False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 5, 0.15, 0.5, 0.0, 10000, 0.001]
 
     ]
 
     results = []
+    graphs_fitness_val = []
+    graphs_gen_val = []
+    graphs_generation_val = []
 
     for e in experiments:
         model = algorithms.Organism(
@@ -128,10 +155,16 @@ def main():
             e[0]
         ])
 
+        graphs_fitness_val.append(fitness_value)
+        graphs_gen_val.append(gen_length)
+        graphs_generation_val.append(generations)
         ## Save graphs
-        graph_fitnessVSgenerations(fitness_values, generations, e[0])
-        graph_distanceVSgenerations(distance_values, generations, e[0])
-        graph_numGensVSgenerations(gen_size, generations, e[0])
+
+        fitness_graphs(graphs_fitness_val, graphs_generation_val, e[0])
+        gen_graphs(graphs_gen_val, graphs_generation_val, e[0])
+        #graph_fitnessVSgenerations(fitness_values, generations, e[0])
+        # graph_distanceVSgenerations(distance_values, generations, e[0])
+        # graph_numGensVSgenerations(gen_size, generations, e[0])
 
     with open(filename, 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)

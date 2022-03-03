@@ -433,7 +433,7 @@ class Organism:
         nm = 1
         number_mutations = [nm]
         # print('num_mut = ' + str(number_mutations))
-        generations = []
+        generations = [i]
         fitness_values = [fitness_value]
         distance_values = [distance_value]
         gen_size = [size_value]
@@ -465,7 +465,7 @@ class Organism:
                         # print('Generacion: ', i)
                         selected_phenotype, fitness_selected, distance_selected = self.model_FGM(father_phenotype)
                         father_phenotype = selected_phenotype
-                        # print('Father: ' + str(father_genotype))
+                        print('Father: ' + str(father_genotype))
                         fitness_value = fitness_selected
                         distance_value = distance_selected
                         i += 1
@@ -515,7 +515,8 @@ class Organism:
                         if i == self.n_generations:
                             break
                         print('Generation: ' + str(i) + ', fitness: ' + str(fitness_value)
-                              + ', number of genes: ' + str(gen_len))
+                              + ', number of genes: ' + str(gen_len) + ', father_phenotype: ' + str(father_phenotype) +
+                              ', father_genotype: ' + str(father_genotype))
                     break
 
             # df1 = pd.DataFrame()
