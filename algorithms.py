@@ -418,20 +418,18 @@ class Organism:
     def run(self):
         initial_point = self.initial_point
         [initial_fitness_value, initial_distance_value] = self.initial_evaluation(initial_point)
-        print('Starting point: ' + str(initial_point))
-        print('Fitness initial point: ' + str(initial_fitness_value))
-        print('Distance to optimum from initial point: ' + str(initial_distance_value))
+        #print('Starting point: ' + str(initial_point))
+        #print('Fitness initial point: ' + str(initial_fitness_value))
+        #print('Distance to optimum from initial point: ' + str(initial_distance_value))
 
         father_genotype, father_phenotype, fitness_value, distance_value, size_value = self.get_favorable_gene(
             initial_fitness_value)
 
-        print('Father genotype : ' + str(father_genotype))
-        print('Father phenotype : ' + str(father_phenotype))
-        print('Father fitness : ' + str(fitness_value))
-        print('Distance to the optimum = ' + str(distance_value))
+        #print('Father genotype : ' + str(father_genotype))
+        #print('Father phenotype : ' + str(father_phenotype))
+        #print('Father fitness : ' + str(fitness_value))
+        #print('Distance to the optimum = ' + str(distance_value))
         i = 0
-        nm = 1
-        number_mutations = [nm]
         # print('num_mut = ' + str(number_mutations))
         generations = [i]
         fitness_values = [fitness_value]
@@ -493,8 +491,8 @@ class Organism:
                         i += 1
                         add_to_elements(fitness_values, fitness_value, distance_values, distance_value, generations,
                                         gen_size, gen_len, i)  # , number_mutations #, nm)
-                        print('Generation: ' + str(i) + ', fitness: ' + str(fitness_value)
-                              + ', number of genes ' + str(gen_len))
+                        #print('Generation: ' + str(i) + ', fitness: ' + str(fitness_value)
+                        #      + ', number of genes ' + str(gen_len))
                     break
 
                 else:
@@ -514,9 +512,9 @@ class Organism:
                                         gen_size, gen_len, i)  # , number_mutations #, nm)
                         if i == self.n_generations:
                             break
-                        print('Generation: ' + str(i) + ', fitness: ' + str(fitness_value)
-                              + ', number of genes: ' + str(gen_len) + ', father_phenotype: ' + str(father_phenotype) +
-                              ', father_genotype: ' + str(father_genotype))
+                        #print('Generation: ' + str(i) + ', fitness: ' + str(fitness_value)
+                        #      + ', number of genes: ' + str(gen_len) + ', father_phenotype: ' + str(father_phenotype) +
+                        #      ', father_genotype: ' + str(father_genotype))
                     break
 
             # df1 = pd.DataFrame()
