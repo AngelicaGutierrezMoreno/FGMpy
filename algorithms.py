@@ -565,13 +565,13 @@ def main(_fgm_mode,
 
 if __name__ == '__main__':
     main(
-        _fgm_mode=False,  # True = FG model, False = proposed model
+        _fgm_mode=True,  # True = FG model, False = proposed model
         _gen_mode=False,  # True = number of generations , False = until optimum is reached
-        _initial_point=[10.0],  # Initial point
-        _n_dim=1,
+        _initial_point=[10.0, 0.0, 0.0, 0.0, 0.0],  # Initial point
+        _n_dim=5,
         _mutation_rate=0.2,  # keep rates minimum
-        _gen_duplication_rate=0.5,
-        _gen_deletion_rate=0.1,
+        _gen_duplication_rate=0.0,
+        _gen_deletion_rate=0.0,
         _n_generations=10000,
         _epsilon=0.001
     )
