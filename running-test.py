@@ -45,8 +45,8 @@ def graph_numGensVSgenerations(gen_size, generations, f):
 
 def gen_graphs(graphs_gen_val, graphs_generation_val, f, color_values, dim):
     genplot = PlotClass()
-    genplot.setTitle('Number of genes comparation %i D' % dim)
-    #genplot.setTitle('Number of genes comparation')
+    #genplot.setTitle('Number of genes comparation %i D' % dim)
+    genplot.setTitle('Number of genes comparation')
     genplot.setXLabel('Generations')
     genplot.setYLabel('Number of genes')
     genplot.setLoc('lower right')
@@ -54,36 +54,36 @@ def gen_graphs(graphs_gen_val, graphs_generation_val, f, color_values, dim):
         genplot.appendSeries(f, graphs_generation_val[i], graphs_gen_val[i], color_values[i])
     genplot.show()
     # genplot.printSeries()
-    #genplot.save('Number of genes comparation')
-    genplot.save("GenSize_comparation%iD_log" % dim)
+    genplot.save('Number of genes comparation-dif-mut')
+    #genplot.save("GenSize_comparation%iD_log" % dim)
 
 
 def fitness_graphs(graphs_fitness_val, graphs_generation_val, f, color_values, dim):
     fitplot = PlotClass()
-    fitplot.setTitle('Distance to the optimum comparation %iD' % dim)
-    #fitplot.setTitle('Distance to the optimum comparation models')
-    fitplot.setZoomTitle('Distance to the optimum comparation %iD- ZOOM' % dim)
+    #fitplot.setTitle('Distance to the optimum comparation %iD' % dim)
+    fitplot.setTitle('Distance to the optimum comparation models')
+    #fitplot.setZoomTitle('Distance to the optimum comparation %iD- ZOOM' % dim)
     fitplot.setXLabel('Generations')
     fitplot.setYLabel('Distance')
     fitplot.setLoc('upper right')
     fitplot.setYScale('log')
-    fitplot.setXMax(600)
+    fitplot.setXMax(700)
     fitplot.setXMin(400)
     fitplot.setYMax(1)
     for i in range(int(len(graphs_fitness_val))):
         fitplot.appendSeries(f, graphs_generation_val[i], graphs_fitness_val[i], color_values[i])
     #fitplot.printSeries()
     fitplot.show()
-    fitplot.zoomShow()
-    fitplot.zoomSave("GenSize_comparation%iD-Zoom_log" % dim)
+    #fitplot.zoomShow()
+    #fitplot.zoomSave("GenSize_comparation%iD-Zoom_log" % dim)
     # fitplot.printSeries()
-    fitplot.save("DistanceToTptimum_comparation%iD_log" % dim)
-    #fitplot.save("DistanceToTptimum_comparationMODELS")
+    #fitplot.save("DistanceToTptimum_comparation%iD_log" % dim)
+    fitplot.save("DistanceToTptimum_comparationMODELS-0-2-mutatios")
 
 
 def main():
 
-    filename = "results-2d-log.csv"
+    filename = "results-dif-dim-fgm-log-0-2-mut.csv"
     header = ['Inicial point', 'Dimensions', 'Mutation rate', 'Dup rate', 'Del. rate', 'Epsilon',
               'Best phenotype', 'Best genotype', 'Distance to optimum', 'Total generations', 'Gen size', 'PlotName']
     # ['id', 'fgm_mode', 'gen_mode', 'inicial_point', 'n_dim', 'mutation_rate', 'gen_duplication_rate', 'gen_deletion_rate', 'n_generations', 'epsilon]
@@ -105,107 +105,107 @@ def main():
         # ["plot1D5-Model", False, False, [10.0], 1, 0.05, 0.5, 0.5, 700, 0.001, 'r'],
         # ["plot1D6-Model", False, False, [10.0], 1, 0.05, 0.5, 0.5, 700, 0.001, 'r']
 
-        ## ------------------------- 2D - plot ----------------------------------------
-        # FGM
-        ["plot2D1-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        ["plot2D2-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        ["plot2D3-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        ["plot2D4-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        ["plot2D5-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        ["plot2D6-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-
-        # Model
-        ["plot2D1-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        ["plot2D2-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        ["plot2D3-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        ["plot2D4-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        ["plot2D5-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        ["plot2D6-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 500, 0.001, 'r']
+        # ## ------------------------- 2D - plot ----------------------------------------
+        # # FGM
+        # ["plot2D1-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot2D2-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot2D3-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot2D4-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot2D5-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot2D6-FGM", False, False, [10.0, 0.0], 2, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        #
+        # # Model
+        # ["plot2D1-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot2D2-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot2D3-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot2D4-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot2D5-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot2D6-Model", False, False, [10.0, 0.0], 2, 0.05, 0.5, 0.5, 1500, 0.001, 'r']
 
         # ## ------------------------- 3D - plot ----------------------------------------
         # # FGM
-        # ["plot3D1-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot3D2-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot3D3-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot3D4-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot3D5-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot3D6-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
+        # ["plot3D1-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot3D2-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot3D3-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot3D4-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot3D5-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot3D6-FGM", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
         #
         # # Model
-        # ["plot3D1-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot3D2-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot3D3-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot3D4-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot3D5-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot3D6-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 500, 0.001, 'r']
+        # ["plot3D1-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot3D2-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot3D3-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot3D4-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot3D5-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot3D6-Model", False, False, [10.0, 0.0, 0.0], 3, 0.05, 0.5, 0.5, 1500, 0.001, 'r']
 
         # ## ------------------------- 4D - plot ----------------------------------------
         # # FGM
-        # ["plot4D1-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot4D2-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot4D3-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot4D4-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot4D5-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
-        # ["plot4D6-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 500, 0.001, 'b'],
+        # ["plot4D1-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot4D2-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot4D3-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot4D4-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot4D5-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
+        # ["plot4D6-FGM", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.0, 0.0, 1500, 0.001, 'b'],
         #
         # # Model
-        # ["plot4D1-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot4D2-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot4D3-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot4D4-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot4D5-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 500, 0.001, 'r'],
-        # ["plot4D6-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 500, 0.001, 'r']
+        # ["plot4D1-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot4D2-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot4D3-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot4D4-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot4D5-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 1500, 0.001, 'r'],
+        # ["plot4D6-Model", False, False, [10.0, 0.0, 0.0, 0.0], 4, 0.05, 0.5, 0.5, 1500, 0.001, 'r']
 
         # ## ------------------------- 5D - plot ----------------------------------------
         #
         # # FGM
-        # ["plot5D1-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot5D2-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot5D3-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot5D4-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot5D5-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot5D6-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
+        # ["plot5D1-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot5D2-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot5D3-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot5D4-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot5D5-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot5D6-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
         #
         # # Model
-        # ["plot5D1-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot5D2-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot5D3-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot5D4-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot5D5-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot5D6-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 600, 0.001, 'r']
+        # ["plot5D1-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot5D2-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot5D3-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot5D4-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot5D5-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot5D6-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0], 5, 0.05, 0.5, 0.5, 1250, 0.001, 'r']
 
         # ## ------------------------- 6D - plot ----------------------------------------
         #
         # # FGM
-        # ["plot6D1-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot6D2-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot6D3-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot6D4-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot6D5-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
-        # ["plot6D6-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 600, 0.001, 'b'],
+        # ["plot6D1-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot6D2-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot6D3-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot6D4-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot6D5-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
+        # ["plot6D6-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.0, 0.0, 1250, 0.001, 'b'],
         #
         # # Model
-        # ["plot6D1-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot6D2-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot6D3-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot6D4-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot6D5-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 600, 0.001, 'r'],
-        # ["plot6D6-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 600, 0.001, 'r']
+        # ["plot6D1-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot6D2-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot6D3-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot6D4-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot6D5-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 1250, 0.001, 'r'],
+        # ["plot6D6-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.05, 0.5, 0.5, 1250, 0.001, 'r']
 
-        # ## ------------------------- Dif dimention - plot ----------------------------------------
-        # # FGM
-        # ["D1-FGM", False, False, [10.0                           ], 1, 0.07, 0.0, 0.0, 1000, 0.001, 'c'],
-        # ["D1-Model", False, False, [10.0                         ], 1, 0.07, 0.5, 0.5, 1000, 0.001, 'c'],
-        # ["D2-FGM", False, False, [10.0, 0.0                      ], 2, 0.07, 0.0, 0.0, 1000, 0.001, 'b'],
-        # ["D2-Model", False, False, [10.0, 0.0                    ], 2, 0.07, 0.5, 0.5, 1000, 0.001, 'b'],
-        # ["D3-FGM", False, False, [10.0, 0.0, 0.0                 ], 3, 0.07, 0.0, 0.0, 1000, 0.001, 'm'],
-        # ["D3-Model", False, False, [10.0, 0.0, 0.0               ], 3, 0.07, 0.5, 0.5, 1000, 0.001, 'm'],
-        # ["D4-FGM", False, False, [10.0, 0.0, 0.0, 0.0            ], 4, 0.07, 0.0, 0.0, 1000, 0.001, 'r'],
-        # ["D4-Model", False, False, [10.0, 0.0, 0.0, 0.0          ], 4, 0.07, 0.5, 0.5, 1000, 0.001, 'r'],
-        # ["D5-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0       ], 5, 0.07, 0.0, 0.0, 1000, 0.001, 'y'],
-        # ["D5-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0     ], 5, 0.07, 0.5, 0.5, 1000, 0.001, 'y'],
-        # ["D6-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0  ], 6, 0.07, 0.0, 0.0, 1000, 0.001, 'k'],
-        # ["D6-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.07, 0.5, 0.5, 1000, 0.001, 'k']
+        ## ------------------------- Dif dimention - plot ----------------------------------------
+        # FGM
+        ["D1-FGM", False, False, [10.0                           ], 1, 0.07, 0.0, 0.0, 1000, 0.001, 'c'],
+        ["D1-Model", False, False, [10.0                         ], 1, 0.07, 0.5, 0.5, 1000, 0.001, 'c'],
+        ["D2-FGM", False, False, [10.0, 0.0                      ], 2, 0.07, 0.0, 0.0, 1000, 0.001, 'b'],
+        ["D2-Model", False, False, [10.0, 0.0                    ], 2, 0.07, 0.5, 0.5, 1000, 0.001, 'b'],
+        ["D3-FGM", False, False, [10.0, 0.0, 0.0                 ], 3, 0.07, 0.0, 0.0, 1000, 0.001, 'm'],
+        ["D3-Model", False, False, [10.0, 0.0, 0.0               ], 3, 0.07, 0.5, 0.5, 1000, 0.001, 'm'],
+        ["D4-FGM", False, False, [10.0, 0.0, 0.0, 0.0            ], 4, 0.07, 0.0, 0.0, 1000, 0.001, 'r'],
+        ["D4-Model", False, False, [10.0, 0.0, 0.0, 0.0          ], 4, 0.07, 0.5, 0.5, 1000, 0.001, 'r'],
+        ["D5-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0       ], 5, 0.07, 0.0, 0.0, 1000, 0.001, 'y'],
+        ["D5-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0     ], 5, 0.07, 0.5, 0.5, 1000, 0.001, 'y'],
+        ["D6-FGM", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0  ], 6, 0.07, 0.0, 0.0, 1000, 0.001, 'k'],
+        ["D6-Model", False, False, [10.0, 0.0, 0.0, 0.0, 0.0, 0.0], 6, 0.07, 0.5, 0.5, 1000, 0.001, 'k']
 
         # ## ------------------------- Dif dimention 0.2 - plot ----------------------------------------
         # # FGM

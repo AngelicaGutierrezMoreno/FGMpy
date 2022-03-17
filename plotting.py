@@ -76,7 +76,7 @@ class PlotClass:
         #print(range(len(self.dataX)))
         for i in range(len(self.dataX)):
             plt.plot(self.dataX[i], self.dataY[i], self.dataColor[i])
-            #plt.legend(self.dataLegends[i], loc=self.loc)
+            plt.legend(self.dataLegends[i], loc=self.loc)
             #print('DataLegends %i: ' % i, str(self.dataLegends[i]))
             #print('DataLegends', str(self.dataLegends[i]))
         plt.show()
@@ -91,7 +91,7 @@ class PlotClass:
         #print(range(len(self.dataX)))
         for i in range(len(self.dataX)):
             plt.plot(self.dataX[i], self.dataY[i], self.dataColor[i])
-            #plt.legend(self.dataLegends[i], loc=self.loc)
+            plt.legend(self.dataLegends[i], loc=self.loc)
             #print('DataLegends Save: ' % i, str(self.dataLegends[i]))
             #print('DataLegends', str(self.dataLegends[i]))
         plt.savefig(filename)
@@ -105,7 +105,7 @@ class PlotClass:
         plt.xscale(self.xscale)
         for i in range(len(self.dataX)):
             plt.plot(self.dataX[i], self.dataY[i], self.dataColor[i])
-            #plt.legend(self.dataLegends[i], loc=self.loc)
+            plt.legend(self.dataLegends[i], loc=self.loc)
             plt.xlim(self.xminval, self.xmaxval)
             plt.ylim(self.yminval, self.ymaxval)
         plt.savefig(filename)
@@ -119,7 +119,7 @@ class PlotClass:
         plt.xscale(self.xscale)
         for i in range(len(self.dataX)):
             plt.plot(self.dataX[i], self.dataY[i], self.dataColor[i])
-            #plt.legend(self.dataLegends[i], loc=self.loc)
+            plt.legend(self.dataLegends[i], loc=self.loc)
             plt.xlim(self.xminval, self.xmaxval)
             plt.ylim(self.yminval, self.ymaxval)
         plt.show()
